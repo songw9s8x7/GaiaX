@@ -1,4 +1,5 @@
 import { View, Text, Image, Button } from "@tarojs/components";
+import React from "react";
 import { Component, ReactNode } from 'react';
 import { toJSON as CssToJSON } from './GXCssParser';
 import GXExpression from './GXExpression';
@@ -93,7 +94,8 @@ class GXViewTreeCreator {
       root.height = context.templateItem.templateHeight + 'px';
     }
 
-    return (<View style={root}>
+    // style={root}
+    return (<View >
       {this.createViewByLayer(context, context.templateInfo.layer, {
         nodeStyle: {},
         nodeCss: {},

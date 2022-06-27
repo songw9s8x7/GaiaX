@@ -1,11 +1,10 @@
 const config = {
-  projectName: 'GaiaXTaro',
-  date: '2022-2-16',
-  designWidth: 375,
+  projectName: 'gaiax-taro-demo',
+  date: '2022-6-27',
+  designWidth: 750,
   deviceRatio: {
     640: 2.34 / 2,
     750: 1,
-    365: 2/1,
     828: 1.81 / 2
   },
   sourceRoot: 'src',

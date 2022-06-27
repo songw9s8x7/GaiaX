@@ -1,6 +1,6 @@
 {
   "miniprogramRoot": "./",
-  "projectname": "GaiaXTaro",
+  "projectname": "gaiax-taro-demo",
   "appid": "testAppId",
   "setting": {
     "es6": false,
