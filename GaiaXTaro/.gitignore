@@ -3,7 +3,6 @@ dist
 .idea
 
 .cache
-packages/remixapp/build
-packages/remixapp/public/build
 .env
 
+learn-debug.log
