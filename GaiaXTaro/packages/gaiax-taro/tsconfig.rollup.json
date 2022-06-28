@@ -12,11 +12,21 @@
     "skipLibCheck": true,
     "sourceMap": true,
     "strictNullChecks": true,
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "target": "es5",
+    "module": "es6",
+    "downlevelIteration": true,
+    "baseUrl": ".",
+    "types": [
+      "node"
+    ]
   },
   "compileOnSave": false,
   "exclude": [
     "node_modules/*",
     "dist/*"
+  ],
+  "include": [
+    "src/**/*"
   ]
 }

@@ -3,25 +3,20 @@ export const endX = /\}/g;
 export const lineX = /([^\;\{\}]*)\;/g;
 export const commentX = /\/\*[\s\S]*?\*\//g;
 export const lineAttrX = /([^\:]+):([^\;]*);/;
-
 // This is used, a concatenation of all above. We use alternation to
 // capture.
 export const altX = /(\/\*[\s\S]*?\*\/)|([^\s\;\{\}][^\;\{\}]*(?=\{))|(\})|([^\;\{\}]+\;(?!\s*\*\/))/gim;
-
-export const isEmpty = function (x: Record<any, any>): boolean {
+export const isEmpty = function (x) {
     return typeof x == 'undefined' || x.length == 0 || x == null;
 };
-
 // const capComment = 1;
 const capSelector = 2;
 const capEnd = 3;
 const capAttr = 4;
-
-export const toJSON = function (cssString: string): any {
+export const toJSON = function (cssString) {
     const node = {};
-    let match: any = null;
+    let match = null;
     let count = 0;
-
     while ((match = altX.exec(cssString)) != null) {
         if (!isEmpty(match[capSelector])) {
             // New node, we recurse
@@ -35,36 +30,40 @@ export const toJSON = function (cssString: string): any {
                     for (const att in newNode) {
                         node[sel][att] = newNode[att];
                     }
-                } else {
+                }
+                else {
                     node[sel] = newNode;
                 }
             }
-        } else if (!isEmpty(match[capEnd])) {
+        }
+        else if (!isEmpty(match[capEnd])) {
             // Node has finished
             return node;
-        } else if (!isEmpty(match[capAttr])) {
+        }
+        else if (!isEmpty(match[capAttr])) {
             const line = match[capAttr].trim();
             const attr = lineAttrX.exec(line);
             if (attr) {
                 // Attribute
                 const name = attr[1].trim();
                 const value = attr[2].trim();
-
                 if (name in node) {
                     const currVal = node[name];
                     if (!(currVal instanceof Array)) {
                         node[name] = [currVal];
                     }
                     node[name].push(value);
-                } else {
+                }
+                else {
                     node[name] = value;
                 }
-            } else {
+            }
+            else {
                 // Semicolon terminated line
                 node[count++] = line;
             }
         }
     }
-
     return node;
 };
+//# sourceMappingURL=GXCssParser.js.map

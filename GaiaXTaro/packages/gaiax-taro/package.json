@@ -1,12 +1,16 @@
 {
   "name": "@gaiax/taro",
   "version": "0.0.0",
+  "module": "dist/index.esm.js",
   "main": "dist/index.js",
+  "source": "src/index.ts",
   "scripts": {
-    "build": "rm -rf dist && rollup --config",
-    "test": "jest"
+    "build": "yarn run build:rollup && yarn run build:lib",
+    "build:lib": "tsc --project ./tsconfig.build.json",
+    "build:rollup": "rollup --config ./rollup.config.js"
   },
   "dependencies": {
+    "@babel/runtime": "^7.7.7",
     "@tarojs/components": "3.4.12",
     "@tarojs/runtime": "3.4.12",
     "@tarojs/taro": "3.4.12",
@@ -16,21 +20,27 @@
     "react": "^17.0.0"
   },
   "devDependencies": {
-    "@babel/runtime": "^7.7.7",
-    "@tarojs/components": "3.4.12",
-    "@tarojs/runtime": "3.4.12",
-    "@tarojs/taro": "3.4.12",
-    "@tarojs/plugin-framework-react": "3.4.12",
-    "@tarojs/react": "3.4.12",
-    "react-dom": "^17.0.0",
-    "react": "^17.0.0",
-    "@types/jest": "^27.0.3",
-    "@types/react": "^17.0.14",
-    "jest": "^27.4.3",
-    "rollup": "^2.60.2",
-    "rollup-plugin-typescript2": "^0.31.1",
-    "ts-jest": "^27.1.1",
-    "tslib": "^2.3.1",
+    "@rollup/plugin-commonjs": "^11.0.2",
+    "@rollup/plugin-json": "^4.0.2",
+    "@rollup/plugin-node-resolve": "^7.1.1",
+    "rollup": "^2.3.1",
+    "rollup-plugin-copy": "^3.3.0",
+    "rollup-plugin-typescript2": "^0.27.0",
+    "rollup-plugin-visualizer": "^4.0.2",
+    "@types/webpack-env": "^1.13.6",
+    "@types/react": "^17.0.2",
+    "@tarojs/mini-runner": "3.4.12",
+    "@babel/core": "^7.8.0",
+    "@tarojs/webpack-runner": "3.4.12",
+    "babel-preset-taro": "3.4.12",
+    "eslint-config-taro": "3.4.12",
+    "eslint": "^8.12.0",
+    "eslint-plugin-react": "^7.8.2",
+    "eslint-plugin-import": "^2.12.0",
+    "eslint-plugin-react-hooks": "^4.2.0",
+    "stylelint": "^14.4.0",
+    "@typescript-eslint/parser": "^5.20.0",
+    "@typescript-eslint/eslint-plugin": "^5.20.0",
     "typescript": "^4.1.0"
   }
 }

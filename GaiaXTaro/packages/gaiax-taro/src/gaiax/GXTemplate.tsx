@@ -1,4 +1,4 @@
-import { View, Text, Image, Button } from "@tarojs/components";
+import { View, Text, Image } from "@tarojs/components";
 import React from "react";
 import { Component, ReactNode } from 'react';
 import { toJSON as CssToJSON } from './GXCssParser';
@@ -171,7 +171,7 @@ class GXViewTreeCreator {
     const nodeData = context.templateInfo.data["data"]?.[layer.id];
 
     // 获取事件绑定
-    const nodeEvent = context.templateInfo.data["event"];
+    // const nodeEvent = context.templateInfo.data["event"];
 
     let nodeExtendRawCss = {};
     let dataResult = '';

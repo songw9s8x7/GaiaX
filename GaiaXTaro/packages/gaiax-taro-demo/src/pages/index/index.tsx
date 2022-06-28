@@ -1,7 +1,8 @@
 import { Component } from "react";
 import { View, Text } from "@tarojs/components";
 import "./index.scss";
-import { GXEngineInstance, GXTemplate, IGXDataSource, GXTemplateItem, GXTemplateInfo, GXFastPreviewInstance, IGXFastPreviewListener } from "gaiax-taro";
+import { GXEngineInstance, GXTemplate, IGXDataSource, GXTemplateItem, GXTemplateInfo } from "@gaiax/taro";
+import { GXFastPreviewInstance, IGXFastPreviewListener } from "../../gaiax/GXFastPreview";
 
 class GXFastPreviewDataSource implements IGXDataSource {
 
@@ -41,9 +42,9 @@ export default class Index extends Component<IParams> {
     const gxFastPreviewListener: IGXFastPreviewListener = {
       onUpdate: (templateId: string, template: any) => {
         gxDataSource.addData(templateId, template)
-          this.setState({
-            templateId: templateId
-          });
+        this.setState({
+          templateId: templateId
+        });
       }
     }
 
