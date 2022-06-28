@@ -1,8 +1,12 @@
-node_modules
-dist
-.idea
 
+.idea
 .cache
 .env
 
 learn-debug.log
+
+node_modules
+
+packages/taro-ui/lib/
+packages/**/dist/
+dist/
