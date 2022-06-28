@@ -7,6 +7,6 @@ learn-debug.log
 
 node_modules
 
-packages/taro-ui/lib/
+packages/gaiax-taro/lib/
 packages/**/dist/
 dist/
