@@ -12,11 +12,20 @@
     "skipLibCheck": true,
     "sourceMap": true,
     "strictNullChecks": true,
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "outDir": "./dist/out-tsc",
+    "types": [
+      "node"
+    ]
   },
   "compileOnSave": false,
   "exclude": [
-    "node_modules/*",
-    "dist/*"
+    "node_modules"
+  ],
+  "include": [
+    "**/*.js",
+    "**/*.jsx",
+    "**/*.ts",
+    "**/*.tsx"
   ]
 }
