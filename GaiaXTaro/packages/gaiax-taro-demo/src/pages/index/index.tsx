@@ -1,8 +1,10 @@
 
+import { View } from "@tarojs/components";
 import { Component } from "react";
 import { GXEngineInstance, GXTemplateComponent, IGXDataSource, GXTemplateItem, GXMeasureSize, GXTemplateData, GXTemplateInfo } from "@gaiax/taro";
 import "./index.scss";
 import { GXFastPreviewInstance, IGXFastPreviewListener } from "../../gaiax/GXFastPreview";
+
 
 class GXFastPreviewDataSource implements IGXDataSource {
 
