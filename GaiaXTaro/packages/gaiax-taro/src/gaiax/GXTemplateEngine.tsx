@@ -37,8 +37,7 @@ export interface IGXDataSource {
     getTemplateInfo(templateItem: GXTemplateItem): GXTemplateInfo;
 }
 
-
-export class GXTemplateEngine {
+export default class GXTemplateEngine {
 
     private viewTreeCreator = new GXViewTreeCreator()
 

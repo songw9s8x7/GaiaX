@@ -2,6 +2,7 @@
   "name": "@gaiax/taro",
   "version": "0.0.0",
   "main": "dist/index.js",
+  "types": "./types/index.d.ts",
   "scripts": {
     "build": "rm -rf dist && rollup --config"
   },
@@ -28,7 +29,6 @@
     "rollup-plugin-typescript2": "^0.31.1",
     "ts-jest": "^27.1.1",
     "tslib": "^2.3.1",
-    
     "@tarojs/mini-runner": "3.4.12",
     "@babel/core": "^7.8.0",
     "@tarojs/webpack-runner": "3.4.12",
