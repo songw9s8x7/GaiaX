@@ -1,7 +1,7 @@
 import typescript from 'rollup-plugin-typescript2';
 
 export default {
-    input: ["src/index.ts"],
+    input: ["src/index.tsx"],
     output: [
         {
             dir: "dist",
@@ -13,10 +13,5 @@ export default {
     plugins: [
         typescript(),
     ],
-    external: ['react',
-    'react-dom',
-    '@tarojs/components',
-    '@tarojs/runtime',
-    '@tarojs/taro',
-    '@tarojs/react']
+    external: ["react"]
 };

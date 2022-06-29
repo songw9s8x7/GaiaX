@@ -1,17 +1,8 @@
-
+node_modules
+dist
 .idea
+
 .cache
 .env
 
-learn-debug.log
-
-node_modules
-
-packages/**/dist/
-dist/
-
-yarn-error.log
-package-lock.json
-
-.vscode
-.idea
+yarn.lock
