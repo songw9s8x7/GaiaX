@@ -1,1 +1,2 @@
-export { GXEngineInstance, GXTemplate, IGXDataSource, GXTemplateItem, GXTemplateInfo } from './GXTemplate';
+export { GXTemplate } from './GXTemplate';
+export { GXEngineInstance, IGXDataSource, GXTemplateItem, GXTemplateInfo } from './GXTemplateEngine';

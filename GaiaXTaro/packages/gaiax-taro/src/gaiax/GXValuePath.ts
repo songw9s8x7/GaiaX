@@ -19,5 +19,4 @@ export default function computeValuePath(valuePath: string, targetObject: any): 
         console.error(error);
         return '';
     }
-
 };
