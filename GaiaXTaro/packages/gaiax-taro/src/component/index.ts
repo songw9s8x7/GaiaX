@@ -1,0 +1,1 @@
+export { GXTemplateComponent, GXTemplateComponentProps, GXTemplateComponentState } from './GXTemplateComponent';

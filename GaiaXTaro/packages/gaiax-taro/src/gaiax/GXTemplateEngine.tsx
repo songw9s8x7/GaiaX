@@ -4,12 +4,18 @@ import GXTemplateContext from "./GXTemplateContext";
 import GXTemplateDataSource from "./GXTemplateDataSource";
 import GXViewTreeCreator from "./GXViewTreeCreator";
 
-export class GXTemplateItem {
+export class GXMeasureSize {
     templateWidth: number;
     templateHeight: number;
+}
+
+export class GXTemplateData {
+    templateData: any;
+}
+
+export class GXTemplateItem {
     templateBiz: string;
     templateId: string;
-    templateData: {};
 }
 
 export class GXTemplateInfo {
@@ -22,9 +28,9 @@ export class GXTemplateInfo {
         return templateInfo;
     }
 
-    layer: {};
-    data: {};
-    css: {};
+    layer: any;
+    data: any;
+    css: any;
 }
 
 export interface IGXDataSource {
@@ -32,26 +38,26 @@ export interface IGXDataSource {
 }
 
 
-export interface GXTemplateProps {
-    templateItem: GXTemplateItem
-}
-
 export class GXTemplateEngine {
 
     private viewTreeCreator = new GXViewTreeCreator()
 
     private dataSource = new GXTemplateDataSource()
 
-    createView(templateItem: GXTemplateItem): ReactNode {
-
+    constructor() {
         this.viewTreeCreator.setDataSource(this.dataSource)
+    }
+
+    createView(gxTemplateItem: GXTemplateItem, gxTemplateData: GXTemplateData, gxMeasureSize: GXMeasureSize): ReactNode {
 
         // 获取数据
-        let templateInfo = this.getTemplateInfo(templateItem)
+        let gxTemplateInfo = this.getTemplateInfo(gxTemplateItem)
+
         // 构建上下文
-        let templateContext = new GXTemplateContext(templateItem, templateInfo);
+        let gxTemplateContext = new GXTemplateContext(gxTemplateItem, gxTemplateData, gxMeasureSize, gxTemplateInfo);
+
         // 创建视图
-        return this.viewTreeCreator.build(templateContext)
+        return this.viewTreeCreator.build(gxTemplateContext)
     }
 
     private getTemplateInfo(templateItem: GXTemplateItem): GXTemplateInfo {
@@ -62,5 +68,3 @@ export class GXTemplateEngine {
         this.dataSource.registerDataSource(dataSource)
     }
 }
-
-export const GXEngineInstance = new GXTemplateEngine()

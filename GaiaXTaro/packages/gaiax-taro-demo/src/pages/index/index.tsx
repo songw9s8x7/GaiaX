@@ -1,7 +1,8 @@
+
 import { Component } from "react";
 import { View, Text } from "@tarojs/components";
+import { GXEngineInstance, GXTemplateComponent, IGXDataSource, GXTemplateItem, GXMeasureSize, GXTemplateData, GXTemplateInfo } from "@gaiax/taro";
 import "./index.scss";
-import { GXEngineInstance, GXTemplate, IGXDataSource, GXTemplateItem, GXTemplateInfo } from "@gaiax/taro";
 import { GXFastPreviewInstance, IGXFastPreviewListener } from "../../gaiax/GXFastPreview";
 
 class GXFastPreviewDataSource implements IGXDataSource {
@@ -71,21 +72,23 @@ export default class Index extends Component<IParams> {
       templateItem.templateBiz = '';
       templateItem.templateId = templateId;
 
+      let templateData = new GXTemplateData();
       const template = gxDataSource.getData(templateId);
-      const constraintSize = JSON.parse(template["index.json"])?.["package"]?.["constraint-size"]
-      templateItem.templateWidth = constraintSize?.['width']
-      templateItem.templateHeight = constraintSize?.['height']
-
       console.log(template);
       if (template != undefined && template['index.mock'] != undefined) {
-        templateItem.templateData = template['index.mock'];
+        templateData.templateData = template['index.mock'];
       } else {
-        templateItem.templateData = {};
+        templateData.templateData = {};
       }
+
+      const constraintSize = JSON.parse(template["index.json"])?.["package"]?.["constraint-size"]
+      let measureSize = new GXMeasureSize();
+      measureSize.templateWidth = constraintSize?.['width']
+      measureSize.templateHeight = constraintSize?.['height']
 
       return (
         <View>
-          <GXTemplate templateItem={templateItem} />
+          <GXTemplateComponent templateData={templateData} templateItem={templateItem} measureSize={measureSize} />
         </View>
       );
     } else {

@@ -1,12 +1,17 @@
-import { GXTemplateInfo, GXTemplateItem } from "./GXTemplateEngine";
+import { GXMeasureSize, GXTemplateData, GXTemplateInfo, GXTemplateItem } from "./GXTemplateEngine";
 
 export default class GXTemplateContext {
-    templateItem: GXTemplateItem;
-    templateInfo: GXTemplateInfo;
+
+    gxTemplateItem: GXTemplateItem;
+    gxTemplateInfo: GXTemplateInfo;
+    gxTemplateData: GXTemplateData;
+    gxMeasureSize: GXMeasureSize;
     isNestChildTemplate: boolean;
 
-    constructor(templateItem: GXTemplateItem, templateInfo: GXTemplateInfo) {
-        this.templateItem = templateItem;
-        this.templateInfo = templateInfo;
+    constructor(gxTemplateItem: GXTemplateItem, gxTemplateData: GXTemplateData, gxMeasureSize: GXMeasureSize, gxTemplateInfo: GXTemplateInfo) {
+        this.gxTemplateItem = gxTemplateItem;
+        this.gxTemplateInfo = gxTemplateInfo;
+        this.gxTemplateData = gxTemplateData;
+        this.gxMeasureSize = gxMeasureSize;
     }
 }

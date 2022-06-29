@@ -2,7 +2,7 @@ import { View, Text, Image } from "@tarojs/components";
 import { ReactNode } from "react";
 import GXExpression from "./GXExpression";
 import GXTemplateContext from "./GXTemplateContext";
-import { GXTemplateItem, IGXDataSource } from "./GXTemplateEngine";
+import { GXMeasureSize, GXTemplateData, GXTemplateItem, IGXDataSource } from "./GXTemplateEngine";
 
 export default class GXViewTreeCreator {
 
@@ -35,18 +35,18 @@ export default class GXViewTreeCreator {
         };
 
         // 处理外部期望的宽度
-        if (context.templateItem.templateWidth != undefined && context.templateItem.templateWidth != null) {
-            root.width = context.templateItem.templateWidth + 'px';
+        if (context.gxMeasureSize.templateWidth != undefined && context.gxMeasureSize.templateWidth != null) {
+            root.width = context.gxMeasureSize.templateWidth + 'px';
         }
         // 处理外部期望的高度
-        if (context.templateItem.templateHeight != undefined && context.templateItem.templateHeight != null) {
-            root.height = context.templateItem.templateHeight + 'px';
+        if (context.gxMeasureSize.templateHeight != undefined && context.gxMeasureSize.templateHeight != null) {
+            root.height = context.gxMeasureSize.templateHeight + 'px';
         }
 
         // style={root}
         return (<View>
             {
-                this.createViewByLayer(context, context.templateInfo.layer, {
+                this.createViewByLayer(context, context.gxTemplateInfo.layer, {
                     nodeStyle: {},
                     nodeCss: {},
                 })
@@ -116,10 +116,10 @@ export default class GXViewTreeCreator {
     private createViewByLayer(context: GXTemplateContext, layer: any, parentNodeInfo: any, visualNodeInfo: any = {}): ReactNode {
 
         // 获取原始节点样式
-        const nodeRawCss = context.templateInfo.css["#" + layer.id] || context.templateInfo.css["." + layer.id]
+        const nodeRawCss = context.gxTemplateInfo.css["#" + layer.id] || context.gxTemplateInfo.css["." + layer.id]
 
         // 获取数据绑定
-        const nodeData = context.templateInfo.data["data"]?.[layer.id];
+        const nodeData = context.gxTemplateInfo.data["data"]?.[layer.id];
 
         // 获取事件绑定
         // const nodeEvent = context.templateInfo.data["event"];
@@ -131,7 +131,7 @@ export default class GXViewTreeCreator {
             // 获取数据绑定结果
             const nodeValueData = nodeData.value
             if (nodeValueData != undefined) {
-                const nodeValueResult = GXExpression.desireData(nodeValueData, context.templateItem.templateData)
+                const nodeValueResult = GXExpression.desireData(nodeValueData, context.gxTemplateData.templateData)
                 if (nodeValueResult != null) {
                     dataResult = nodeValueResult;
                 }
@@ -140,7 +140,7 @@ export default class GXViewTreeCreator {
             // 获取样式绑定的结果
             const nodeExtendData = nodeData.extend
             if (nodeExtendData != undefined) {
-                const nodeExtendResult = GXExpression.desireData(nodeExtendData, context.templateItem.templateData)
+                const nodeExtendResult = GXExpression.desireData(nodeExtendData, context.gxTemplateData.templateData)
                 if (nodeExtendResult != null) {
                     nodeExtendRawCss = nodeExtendResult;
                 }
@@ -171,13 +171,15 @@ export default class GXViewTreeCreator {
             case 'gaia-template':
                 if (layer['sub-type'] == 'custom') {
                     const nestTemplateItem = new GXTemplateItem();
-                    nestTemplateItem.templateBiz = context.templateItem.templateBiz;
+                    nestTemplateItem.templateBiz = context.gxTemplateItem.templateBiz;
                     nestTemplateItem.templateId = layer.id;
                     const nestTemplateInfo = this.dataSource.getTemplateInfo(nestTemplateItem);
+                    const measureSize = new GXMeasureSize();
+                    const nestTemplateData = new GXTemplateData();
                     if (nestTemplateInfo != null && nestTemplateInfo != undefined) {
-                        let templateContext = new GXTemplateContext(nestTemplateItem, nestTemplateInfo);
-                        templateContext.isNestChildTemplate = true;
-                        return this.createViewByLayer(templateContext, nestTemplateInfo.layer, {
+                        let gxTemplateContext = new GXTemplateContext(nestTemplateItem, nestTemplateData, measureSize, nestTemplateInfo);
+                        gxTemplateContext.isNestChildTemplate = true;
+                        return this.createViewByLayer(gxTemplateContext, nestTemplateInfo.layer, {
                             nodeStyle: parentNodeInfo.nodeStyle,
                             nodeCss: parentNodeInfo.nodeCss,
                         }, {
@@ -187,6 +189,7 @@ export default class GXViewTreeCreator {
                     } else {
                         return <View style={nodeStyle} key={layer.id} />;
                     }
+                    return <View style={nodeStyle} key={layer.id} />;
                 } else {
                     // 普通层级
                     if (layer.layers != null && layer.layers != undefined) {
