@@ -2,7 +2,8 @@
   "compilerOptions": {
     "allowSyntheticDefaultImports": true,
     "experimentalDecorators": true,
-    "jsx": "react-jsx",
+    "jsx": "react",
+    "jsxFactory": "React.createElement",
     "moduleResolution": "node",
     "noImplicitAny": false,
     "noUnusedLocals": true,
@@ -15,6 +16,10 @@
     "outDir": "./dist/out-tsc",
     "types": [
       "node"
+    ],
+    "typeRoots": [
+      "node_modules/@types",
+      "types"
     ]
   },
   "compileOnSave": false,
