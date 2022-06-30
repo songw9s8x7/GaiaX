@@ -36,6 +36,10 @@ export interface GXJSONObject {
 
 export interface GXJSONArray extends Array<GXJSONValue> { }
 
+export class GXNode {
+    nodeStyle: React.CSSProperties;
+}
+
 export class GXTemplateInfo {
 
     static create(layer: string, css: string, data: string): GXTemplateInfo {

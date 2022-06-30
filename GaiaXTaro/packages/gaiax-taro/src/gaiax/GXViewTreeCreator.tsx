@@ -19,7 +19,7 @@ export default class GXViewTreeCreator {
 
         const gxTemplateInfo = gxTemplateContext.gxTemplateInfo;
 
-        const gxRootView = this.createViewByLayer(gxTemplateContext, gxTemplateInfo.layer, {
+        const gxRootView = this.createViewTree(gxTemplateContext, gxTemplateInfo.layer, {
             nodeStyle: {},
             nodeCss: {},
         })
@@ -121,7 +121,7 @@ export default class GXViewTreeCreator {
         return nodeStyle as React.CSSProperties;
     }
 
-    private createViewByLayer(gxTemplateContext: GXTemplateContext, layer: GXJSONObject, parentNodeInfo: any, visualNodeInfo: any = {}): ReactNode {
+    private createViewTree(gxTemplateContext: GXTemplateContext, layer: GXJSONObject, parentNodeInfo: any, visualNodeInfo: any = {}): ReactNode {
 
         const gxTemplateInfo = gxTemplateContext.gxTemplateInfo;
 
@@ -169,14 +169,6 @@ export default class GXViewTreeCreator {
         // 获取转换后的节点样式
         const nodeStyle = this.createViewStyleByCss(gxTemplateContext, layer, nodeCss, parentNodeInfo)
 
-        console.log({
-            id: layer.id,
-            nodeData: nodeData,
-            nodeStyle: nodeStyle,
-            nodeCss: nodeCss,
-            dataResult: dataResult
-        });
-
         switch (layer.type) {
             case 'gaia-template':
                 if (layer['sub-type'] == 'custom') {
@@ -189,7 +181,7 @@ export default class GXViewTreeCreator {
                     if (nestTemplateInfo != null && nestTemplateInfo != undefined) {
                         let gxTemplateContext = new GXTemplateContext(nestTemplateItem, nestTemplateData, measureSize, nestTemplateInfo);
                         gxTemplateContext.isNestChildTemplate = true;
-                        return this.createViewByLayer(gxTemplateContext, nestTemplateInfo.layer, {
+                        return this.createViewTree(gxTemplateContext, nestTemplateInfo.layer, {
                             nodeStyle: parentNodeInfo.nodeStyle,
                             nodeCss: parentNodeInfo.nodeCss,
                         }, {
@@ -199,14 +191,13 @@ export default class GXViewTreeCreator {
                     } else {
                         return <View style={nodeStyle} key={layer.id} />;
                     }
-                    return <View style={nodeStyle} key={layer.id} />;
                 } else {
                     // 普通层级
                     if (layer.layers != null && layer.layers != undefined) {
                         const childArray: ReactNode[] = [];
                         for (var i = 0; i < layer.layers.length; i++) {
                             const childLayer = layer.layers[i] as GXJSONObject;
-                            childArray.push(this.createViewByLayer(gxTemplateContext, childLayer, {
+                            childArray.push(this.createViewTree(gxTemplateContext, childLayer, {
                                 nodeStyle: nodeStyle,
                             }))
                         }
@@ -222,7 +213,7 @@ export default class GXViewTreeCreator {
                     const childArray: ReactNode[] = [];
                     for (var i = 0; i < layer.layers.length; i++) {
                         const childLayer = layer.layers[i] as GXJSONObject;
-                        childArray.push(this.createViewByLayer(gxTemplateContext, childLayer, {
+                        childArray.push(this.createViewTree(gxTemplateContext, childLayer, {
                             nodeStyle: nodeStyle
                         }))
                     }
