@@ -18,6 +18,24 @@ export class GXTemplateItem {
     templateId: string;
 }
 
+export type GXJSONValue =
+    | string
+    | number
+    | boolean
+    | any
+    | GXJSONObject
+    | GXJSONArray
+    | null
+    | {}
+
+export interface GXJSONObject {
+    id: string;
+    layers: GXJSONArray;
+    [k: string]: GXJSONValue;
+}
+
+export interface GXJSONArray extends Array<GXJSONValue> { }
+
 export class GXTemplateInfo {
 
     static create(layer: string, css: string, data: string): GXTemplateInfo {
@@ -28,7 +46,7 @@ export class GXTemplateInfo {
         return templateInfo;
     }
 
-    layer: any;
-    data: any;
-    css: any;
+    layer: GXJSONObject;
+    data: GXJSONObject;
+    css: GXJSONObject;
 }

@@ -62,8 +62,6 @@ class GXFastPreview {
                     templateJson['index.css'] = index_css;
                     templateJson['index.js'] = index_js;
 
-                    console.log(templateJson);
-
                     this.listener.onUpdate(templateId, templateJson);
                 }
             })

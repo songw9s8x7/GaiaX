@@ -3,7 +3,7 @@ import React, { ReactNode } from "react";
 import GXExpression from "./GXExpression";
 import GXTemplateContext from "./GXTemplateContext";
 import PropTypes, { InferProps } from 'prop-types'
-import { GXMeasureSize, GXTemplateData, GXTemplateItem, IGXDataSource } from "./GXDefine";
+import { GXMeasureSize, GXTemplateData, GXTemplateItem, IGXDataSource, GXJSONObject, GXJSONValue } from "./GXDefine";
 
 export default class GXViewTreeCreator {
 
@@ -121,7 +121,7 @@ export default class GXViewTreeCreator {
         return nodeStyle as React.CSSProperties;
     }
 
-    private createViewByLayer(gxTemplateContext: GXTemplateContext, layer: any, parentNodeInfo: any, visualNodeInfo: any = {}): ReactNode {
+    private createViewByLayer(gxTemplateContext: GXTemplateContext, layer: GXJSONObject, parentNodeInfo: any, visualNodeInfo: any = {}): ReactNode {
 
         const gxTemplateInfo = gxTemplateContext.gxTemplateInfo;
 
@@ -205,7 +205,7 @@ export default class GXViewTreeCreator {
                     if (layer.layers != null && layer.layers != undefined) {
                         const childArray: ReactNode[] = [];
                         for (var i = 0; i < layer.layers.length; i++) {
-                            const childLayer = layer.layers[i];
+                            const childLayer = layer.layers[i] as GXJSONObject;
                             childArray.push(this.createViewByLayer(gxTemplateContext, childLayer, {
                                 nodeStyle: nodeStyle,
                             }))
@@ -221,7 +221,7 @@ export default class GXViewTreeCreator {
                 if (layer.layers != null && layer.layers != undefined) {
                     const childArray: ReactNode[] = [];
                     for (var i = 0; i < layer.layers.length; i++) {
-                        const childLayer = layer.layers[i];
+                        const childLayer = layer.layers[i] as GXJSONObject;
                         childArray.push(this.createViewByLayer(gxTemplateContext, childLayer, {
                             nodeStyle: nodeStyle
                         }))

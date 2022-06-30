@@ -75,7 +75,6 @@ export default class Index extends Component<IParams> {
 
       let templateData = new GXTemplateData();
       const template = gxDataSource.getData(templateId);
-      console.log(template);
       if (template != undefined && template['index.mock'] != undefined) {
         templateData.templateData = template['index.mock'];
       } else {
