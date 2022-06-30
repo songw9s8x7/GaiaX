@@ -1,7 +1,7 @@
 import React from 'react';
 import { GXEngineInstance } from '..';
+import { GXMeasureSize, GXTemplateData, GXTemplateItem } from '../gaiax/GXDefine';
 
-import { GXTemplateItem, GXMeasureSize, GXTemplateData } from "../gaiax/GXTemplateEngine";
 
 export interface GXTemplateComponentState {
 
@@ -9,17 +9,13 @@ export interface GXTemplateComponentState {
 
 export interface GXTemplateComponentProps {
 
-    templateItem: GXTemplateItem
+  templateItem: GXTemplateItem
 
-    measureSize: GXMeasureSize
+  measureSize: GXMeasureSize
 
-    templateData: GXTemplateData
+  templateData: GXTemplateData
 }
 
-
-/**
- * 
- */
 export default class GXTemplateComponent extends React.Component<GXTemplateComponentProps, GXTemplateComponentState> {
   render() {
     const { templateItem, measureSize, templateData } = this.props

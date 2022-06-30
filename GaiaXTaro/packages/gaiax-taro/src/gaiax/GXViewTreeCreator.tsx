@@ -2,7 +2,7 @@ import { View, Text, Image } from "@tarojs/components";
 import React, { ReactNode } from "react";
 import GXExpression from "./GXExpression";
 import GXTemplateContext from "./GXTemplateContext";
-import { GXMeasureSize, GXTemplateData, GXTemplateItem, IGXDataSource } from "./GXTemplateEngine";
+import { GXMeasureSize, GXTemplateData, GXTemplateItem, IGXDataSource } from "./GXDefine";
 
 export default class GXViewTreeCreator {
 

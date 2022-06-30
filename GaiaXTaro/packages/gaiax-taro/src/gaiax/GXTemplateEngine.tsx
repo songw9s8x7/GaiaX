@@ -1,41 +1,9 @@
 import { ReactNode } from "react";
-import { toJSON } from "./GXCssParser";
+import { GXMeasureSize, GXTemplateData, GXTemplateInfo, GXTemplateItem, IGXDataSource } from "./GXDefine";
 import GXTemplateContext from "./GXTemplateContext";
 import GXTemplateDataSource from "./GXTemplateDataSource";
 import GXViewTreeCreator from "./GXViewTreeCreator";
 
-export class GXMeasureSize {
-    templateWidth: number;
-    templateHeight: number;
-}
-
-export class GXTemplateData {
-    templateData: any;
-}
-
-export class GXTemplateItem {
-    templateBiz: string;
-    templateId: string;
-}
-
-export class GXTemplateInfo {
-
-    static create(layer: string, css: string, data: string): GXTemplateInfo {
-        let templateInfo = new GXTemplateInfo();
-        templateInfo.layer = JSON.parse(layer);
-        templateInfo.data = JSON.parse(data);
-        templateInfo.css = toJSON(css);
-        return templateInfo;
-    }
-
-    layer: any;
-    data: any;
-    css: any;
-}
-
-export interface IGXDataSource {
-    getTemplateInfo(templateItem: GXTemplateItem): GXTemplateInfo;
-}
 
 export default class GXTemplateEngine {
 

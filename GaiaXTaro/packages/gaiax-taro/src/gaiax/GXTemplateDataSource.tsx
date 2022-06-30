@@ -1,4 +1,4 @@
-import { GXTemplateInfo, GXTemplateItem, IGXDataSource } from "./GXTemplateEngine";
+import { GXTemplateInfo, GXTemplateItem, IGXDataSource } from "./GXDefine";
 
 export default class GXTemplateDataSource implements IGXDataSource {
 

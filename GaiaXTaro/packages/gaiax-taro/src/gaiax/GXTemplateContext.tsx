@@ -1,4 +1,4 @@
-import { GXMeasureSize, GXTemplateData, GXTemplateInfo, GXTemplateItem } from "./GXTemplateEngine";
+import { GXMeasureSize, GXTemplateData, GXTemplateInfo, GXTemplateItem } from "./GXDefine";
 
 export default class GXTemplateContext {
 
