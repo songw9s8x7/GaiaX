@@ -37,6 +37,8 @@ export default class GXViewTreeCreator {
 
         const gxNode = GXNode.create();
 
+        gxNode.setIdPath(gxLayer, gxParentNode)
+
         gxNode.gxTemplateNode = GXTemplateNode.create(gxLayer, gxTemplateInfo);
 
         // 获取原始节点样式
@@ -72,8 +74,8 @@ export default class GXViewTreeCreator {
 
         // 合并节点样式
         let parentRawCss = {};
-        if (gxVisualTemplateNode != null && gxVisualTemplateNode.nodeCss != null && gxVisualTemplateNode.nodeCss != undefined) {
-            parentRawCss = gxVisualTemplateNode.nodeCss;
+        if (gxVisualTemplateNode != null && gxVisualTemplateNode.finalNodeCss != null && gxVisualTemplateNode.finalNodeCss != undefined) {
+            parentRawCss = gxVisualTemplateNode.finalNodeCss;
         }
 
         const finalNodeCss = Object.assign({}, nodeRawCss, nodeExtendRawCss, parentRawCss);
@@ -96,8 +98,8 @@ export default class GXViewTreeCreator {
                         gxNode.finalNodeStyle = gxParentNode.finalNodeStyle;
                         gxNode.nodeCss = gxParentNode.nodeCss;
                         const gxTemplateNode = new GXTemplateNode();
-                        gxTemplateNode.nodeCss = finalNodeCss;
-                        gxTemplateNode.nodeStyle = finalNodeStyle;
+                        gxTemplateNode.finalNodeCss = finalNodeCss;
+                        gxTemplateNode.finalNodeStyle = finalNodeStyle;
                         return this.createViewTree(gxTemplateContext, nestTemplateInfo.layer, gxNode, gxTemplateNode);
                     } else {
                         return <View style={finalNodeStyle} key={gxLayer.id} />;
