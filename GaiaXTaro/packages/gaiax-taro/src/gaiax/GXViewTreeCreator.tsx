@@ -41,18 +41,14 @@ export default class GXViewTreeCreator {
 
         gxNode.gxTemplateNode = GXTemplateNode.create(gxLayer, gxTemplateInfo);
 
-        // 获取原始节点样式
-        const nodeRawCss = gxTemplateInfo.css["#" + gxLayer.id] || gxTemplateInfo.css["." + gxLayer.id]
-
-        // 获取数据绑定
-        const nodeData = gxTemplateInfo.data["data"]?.[gxLayer.id];
+        gxParentNode?.gxChildren?.push(gxNode)
 
         let nodeExtendRawCss = {};
         let dataResult = '';
-        if (typeof nodeData == 'object') {
+        if (typeof gxNode.gxTemplateNode.data == 'object') {
 
             // 获取数据绑定结果
-            const nodeValueData = nodeData.value
+            const nodeValueData = gxNode.gxTemplateNode.data.value
             if (nodeValueData != undefined) {
                 const nodeValueResult = GXExpression.desireData(nodeValueData, gxTemplateContext.gxTemplateData.templateData)
                 if (nodeValueResult != null) {
@@ -61,27 +57,29 @@ export default class GXViewTreeCreator {
             }
 
             // 获取样式绑定的结果
-            const nodeExtendData = nodeData.extend
+            const nodeExtendData = gxNode.gxTemplateNode.data.extend
             if (nodeExtendData != undefined) {
                 const nodeExtendResult = GXExpression.desireData(nodeExtendData, gxTemplateContext.gxTemplateData.templateData)
                 if (nodeExtendResult != null) {
                     nodeExtendRawCss = nodeExtendResult;
                 }
             }
-        } else if (typeof nodeData == 'string') {
-            dataResult = nodeData;
+        } else if (typeof gxNode.gxTemplateNode.data == 'string') {
+            dataResult = gxNode.gxTemplateNode.data;
         }
 
-        // 合并节点样式
-        let parentRawCss = {};
-        if (gxVisualTemplateNode != null && gxVisualTemplateNode.finalNodeCss != null && gxVisualTemplateNode.finalNodeCss != undefined) {
-            parentRawCss = gxVisualTemplateNode.finalNodeCss;
-        }
-
-        const finalNodeCss = Object.assign({}, nodeRawCss, nodeExtendRawCss, parentRawCss);
+        const finalNodeCss = Object.assign({}, gxNode.gxTemplateNode.css, nodeExtendRawCss, gxVisualTemplateNode?.finalNodeCss || {});
 
         // 获取转换后的节点样式
         const finalNodeStyle = this.createViewStyleByCss(gxTemplateContext, gxLayer, finalNodeCss, gxParentNode)
+
+        if (gxNode.isNestRoot()) {
+
+        } else if (gxNode.isContainerType()) {
+
+        } else {
+
+        }
 
         switch (gxLayer.type) {
             case 'gaia-template':

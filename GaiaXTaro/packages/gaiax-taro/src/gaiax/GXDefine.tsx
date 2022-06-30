@@ -29,7 +29,6 @@ export type GXJSONValue =
     | {}
 
 export interface GXJSONObject {
-    id: string;
     layers: GXJSONArray;
     [k: string]: GXJSONValue;
 }
@@ -40,6 +39,7 @@ export interface GXJSONArray extends Array<GXJSONValue> { }
  * 节点的原始样式
  */
 export class GXTemplateNode {
+
     finalNodeStyle: React.CSSProperties;
     finalNodeCss: any;
 
@@ -49,23 +49,44 @@ export class GXTemplateNode {
     event: GXJSONObject;
     animation: GXJSONObject;
 
+    isNestRoot(): boolean {
+        return false;
+    }
+
+    isContainerType(): boolean {
+        return false;
+    }
+
+    isGridType() {
+        return this.layer['type'] == 'gaia-template' && this.layer['sub-type'] == 'grid'
+    }
+
     static create(gxLayer: GXJSONObject, gxTemplateInfo: GXTemplateInfo): GXTemplateNode {
         const gxTemplateNode = new GXTemplateNode()
         // 获取原始节点的层级
         gxTemplateNode.layer = gxLayer
         // 获取原始节点的样式
-        gxTemplateNode.css = gxTemplateInfo.css["#" + gxLayer.id] || gxTemplateInfo.css["." + gxLayer.id]
+        gxTemplateNode.css = gxTemplateInfo.css['#' + gxLayer['id']] || gxTemplateInfo.css['.' + gxLayer['id']]
         // 获取原始节点的数据
-        gxTemplateNode.data = gxTemplateInfo.data["data"]?.[gxLayer.id];
+        gxTemplateNode.data = gxTemplateInfo.data['data']?.[gxLayer['id']];
         // 获取原始节点的事件
-        gxTemplateNode.event = gxTemplateInfo.data["event"];
+        gxTemplateNode.event = gxTemplateInfo.data['event'];
         // 获取原始节点的动画
-        gxTemplateNode.animation = gxTemplateInfo.data["animation"];
+        gxTemplateNode.animation = gxTemplateInfo.data['animation'];
         return gxTemplateNode;
     }
 }
 
 export class GXNode {
+
+    isContainerType(): boolean {
+        return this.gxTemplateNode.isContainerType();
+    }
+
+    isNestRoot(): boolean {
+        return this.gxTemplateNode.isNestRoot();
+    }
+
     finalNodeStyle: React.CSSProperties;
     nodeCss: any;
 
@@ -73,9 +94,10 @@ export class GXNode {
 
     id: string = '';
     idPath: string = '';
+    gxChildren: Array<GXNode>;
 
     setIdPath(gxLayer: GXJSONObject, gxParentNode?: GXNode) {
-        this.id = gxLayer.id;
+        this.id = gxLayer['id'];
         if (gxParentNode != null) {
             if (this.idPath.length != 0) {
                 this.idPath = `${gxParentNode.idPath}@${this.idPath}@${this.id}`
