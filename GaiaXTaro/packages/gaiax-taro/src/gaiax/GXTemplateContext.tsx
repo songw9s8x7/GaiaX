@@ -1,5 +1,5 @@
 import { ReactNode } from "react";
-import { GXMeasureSize, GXTemplateData, GXTemplateInfo, GXTemplateItem } from "./GXDefine";
+import { GXMeasureSize, GXTemplateData, GXTemplateInfo, GXTemplateItem, GXTemplateNode } from "./GXDefine";
 
 export default class GXTemplateContext {
 
@@ -10,6 +10,8 @@ export default class GXTemplateContext {
     gxTemplateData: GXTemplateData;
 
     gxMeasureSize: GXMeasureSize;
+
+    gxVisualTemplateNode?: GXTemplateNode;
 
     isNestChildTemplate: boolean;
 

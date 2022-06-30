@@ -36,8 +36,43 @@ export interface GXJSONObject {
 
 export interface GXJSONArray extends Array<GXJSONValue> { }
 
-export class GXNode {
+/**
+ * 节点的原始样式
+ */
+export class GXTemplateNode {
     nodeStyle: React.CSSProperties;
+    nodeCss: any;
+
+    layer: GXJSONObject;
+    css: GXJSONObject;
+    data: GXJSONObject;
+    event: GXJSONObject;
+    animation: GXJSONObject;
+
+    static create(gxLayer: GXJSONObject, gxTemplateInfo: GXTemplateInfo): GXTemplateNode {
+        const gxTemplateNode = new GXTemplateNode()
+        // 获取原始节点的层级
+        gxTemplateNode.layer = gxLayer
+        // 获取原始节点的样式
+        gxTemplateNode.css = gxTemplateInfo.css["#" + gxLayer.id] || gxTemplateInfo.css["." + gxLayer.id]
+        // 获取原始节点的数据
+        gxTemplateNode.data = gxTemplateInfo.data["data"]?.[gxLayer.id];
+        // 获取原始节点的事件
+        gxTemplateNode.event = gxTemplateInfo.data["event"];
+        // 获取原始节点的动画
+        gxTemplateNode.animation = gxTemplateInfo.data["animation"];
+        return gxTemplateNode;
+    }
+}
+
+export class GXNode {
+    finalNodeStyle: React.CSSProperties;
+    nodeCss: any;
+    gxTemplateNode: GXTemplateNode;
+
+    static create(): GXNode {
+        return new GXNode();
+    }
 }
 
 export class GXTemplateInfo {

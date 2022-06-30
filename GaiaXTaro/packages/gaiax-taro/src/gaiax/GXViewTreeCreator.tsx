@@ -3,7 +3,7 @@ import React, { ReactNode } from "react";
 import GXExpression from "./GXExpression";
 import GXTemplateContext from "./GXTemplateContext";
 import PropTypes, { InferProps } from 'prop-types'
-import { GXMeasureSize, GXTemplateData, GXTemplateItem, IGXDataSource, GXJSONObject, GXJSONValue } from "./GXDefine";
+import { GXMeasureSize, GXTemplateData, GXTemplateItem, IGXDataSource, GXJSONObject, GXJSONValue, GXTemplateNode, GXNode } from "./GXDefine";
 
 export default class GXViewTreeCreator {
 
@@ -19,120 +19,31 @@ export default class GXViewTreeCreator {
 
         const gxTemplateInfo = gxTemplateContext.gxTemplateInfo;
 
-        const gxRootView = this.createViewTree(gxTemplateContext, gxTemplateInfo.layer, {
-            nodeStyle: {},
-            nodeCss: {},
-        })
+        const gxVisualTemplateNode = gxTemplateContext.gxVisualTemplateNode;
+
+        const gxRootView = this.createViewTree(gxTemplateContext, gxTemplateInfo.layer, null, gxVisualTemplateNode)
 
         return <View style={gxRootStyle}>{gxRootView}</View>;
     }
 
-    private createRootStyle(gxMeasureSize: GXMeasureSize): React.CSSProperties {
-        const rootStyle = {
-            display: 'flex',
-            position: 'relative',
-            direction: 'inherit',
-            flexDirection: 'row',
-            flexWrap: 'nowrap',
-            overflow: 'hidden',
-            alignItems: 'stretch',
-            alignSelf: 'auto',
-            alignContent: 'flex-start',
-            justifyContent: 'flex-start',
-            flexShrink: '0',
-            flexGrow: '0',
-            width: '100%',
-            height: 'auto',
-            minWidth: 'auto',
-            minHeight: 'auto',
-            maxWidth: 'auto',
-            maxHeight: 'auto'
-        };
-
-        // 处理外部期望的宽度
-        if (gxMeasureSize.templateWidth != undefined && gxMeasureSize.templateWidth != null) {
-            rootStyle.width = gxMeasureSize.templateWidth + 'px';
-        }
-
-        // 处理外部期望的高度
-        if (gxMeasureSize.templateHeight != undefined && gxMeasureSize.templateHeight != null) {
-            rootStyle.height = gxMeasureSize.templateHeight + 'px';
-        }
-
-        return rootStyle as React.CSSProperties;
-    }
-
-    private createViewStyleByCss(gxTemplateContext: GXTemplateContext, layer: any, nodeCss: any, parentNodeInfo: any): React.CSSProperties {
-        let nodeStyle = {
-            display: 'flex',
-            position: "relative",
-            direction: 'inherit',
-            flexDirection: 'row',
-            flexWrap: 'nowrap',
-            overflow: 'hidden',
-            alignItems: 'stretch',
-            alignSelf: 'auto',
-            alignContent: 'flex-start',
-            justifyContent: 'flex-start',
-            flexShrink: '1',
-            flexGrow: '0',
-            // flexBasis: 'auto',
-            // paddingLeft: '0px',
-            // paddingTop: '0px',
-            // paddingRight: '0px',
-            // paddingBottom: '0px',
-            // marginLeft: '0px',
-            // marginTop: '0px',
-            // marginRight: '0px',
-            // marginBottom: '0px',
-            // left: '0px',
-            // top: '0px',
-            // right: '0px',
-            // bottom: '0px',
-            width: 'auto',
-            height: 'auto',
-            minWidth: 'auto',
-            minHeight: 'auto',
-            maxWidth: 'auto',
-            maxHeight: 'auto',
-            // // 无法使用
-            // aspectRatio: '',
-            // // 
-            // backgroundColor: '',
-            // fontSize: '',
-            // fontFamily: 'unset',
-            // color: '',
-            // fontWeight: 'unset',
-            // backgroundImage: 'unset',
-            // maxLines: 'unset',
-            // textOverflow: 'unset',
-            // textAlign: 'unset',
-            // borderColor: 'unset',
-            // borderWidth: '0px',
-            // borderTopLeftRadius: '0px',
-            // borderTopRightRadius: '0px',
-            // borderBottomLeftRadius: '0px',
-            // borderBottomRightRadius: '0px',
-            // lineHeight: '',
-            // textDecoration: '',
-            // mode: '',
-        };
-        this.updateViewStyleByCss(gxTemplateContext, nodeStyle, layer, nodeCss, parentNodeInfo);
-        return nodeStyle as React.CSSProperties;
-    }
-
-    private createViewTree(gxTemplateContext: GXTemplateContext, layer: GXJSONObject, parentNodeInfo: any, visualNodeInfo: any = {}): ReactNode {
+    private createViewTree(
+        gxTemplateContext: GXTemplateContext,
+        gxLayer: GXJSONObject,
+        gxParentNode?: GXNode,
+        gxVisualTemplateNode?: GXTemplateNode
+    ): ReactNode {
 
         const gxTemplateInfo = gxTemplateContext.gxTemplateInfo;
 
+        const gxNode = GXNode.create();
+
+        gxNode.gxTemplateNode = GXTemplateNode.create(gxLayer, gxTemplateInfo);
+
         // 获取原始节点样式
-        const nodeRawCss = gxTemplateInfo.css["#" + layer.id] || gxTemplateInfo.css["." + layer.id]
+        const nodeRawCss = gxTemplateInfo.css["#" + gxLayer.id] || gxTemplateInfo.css["." + gxLayer.id]
 
         // 获取数据绑定
-        const nodeData = gxTemplateInfo.data["data"]?.[layer.id];
-
-        // 获取事件绑定
-        // const nodeEvent = context.templateInfo.data["event"];
+        const nodeData = gxTemplateInfo.data["data"]?.[gxLayer.id];
 
         let nodeExtendRawCss = {};
         let dataResult = '';
@@ -161,86 +72,84 @@ export default class GXViewTreeCreator {
 
         // 合并节点样式
         let parentRawCss = {};
-        if (visualNodeInfo.nodeCss != null && visualNodeInfo.nodeCss != undefined) {
-            parentRawCss = visualNodeInfo.nodeCss;
+        if (gxVisualTemplateNode != null && gxVisualTemplateNode.nodeCss != null && gxVisualTemplateNode.nodeCss != undefined) {
+            parentRawCss = gxVisualTemplateNode.nodeCss;
         }
-        const nodeCss = Object.assign({}, nodeRawCss, nodeExtendRawCss, parentRawCss);
+
+        const finalNodeCss = Object.assign({}, nodeRawCss, nodeExtendRawCss, parentRawCss);
 
         // 获取转换后的节点样式
-        const nodeStyle = this.createViewStyleByCss(gxTemplateContext, layer, nodeCss, parentNodeInfo)
+        const finalNodeStyle = this.createViewStyleByCss(gxTemplateContext, gxLayer, finalNodeCss, gxParentNode)
 
-        switch (layer.type) {
+        switch (gxLayer.type) {
             case 'gaia-template':
-                if (layer['sub-type'] == 'custom') {
+                if (gxLayer['sub-type'] == 'custom') {
                     const nestTemplateItem = new GXTemplateItem();
                     nestTemplateItem.templateBiz = gxTemplateContext.gxTemplateItem.templateBiz;
-                    nestTemplateItem.templateId = layer.id;
+                    nestTemplateItem.templateId = gxLayer.id;
                     const nestTemplateInfo = this.dataSource.getTemplateInfo(nestTemplateItem);
                     const measureSize = new GXMeasureSize();
                     const nestTemplateData = new GXTemplateData();
                     if (nestTemplateInfo != null && nestTemplateInfo != undefined) {
                         let gxTemplateContext = new GXTemplateContext(nestTemplateItem, nestTemplateData, measureSize, nestTemplateInfo);
                         gxTemplateContext.isNestChildTemplate = true;
-                        return this.createViewTree(gxTemplateContext, nestTemplateInfo.layer, {
-                            nodeStyle: parentNodeInfo.nodeStyle,
-                            nodeCss: parentNodeInfo.nodeCss,
-                        }, {
-                            nodeStyle: nodeStyle,
-                            nodeCss: nodeCss,
-                        });
+                        gxNode.finalNodeStyle = gxParentNode.finalNodeStyle;
+                        gxNode.nodeCss = gxParentNode.nodeCss;
+                        const gxTemplateNode = new GXTemplateNode();
+                        gxTemplateNode.nodeCss = finalNodeCss;
+                        gxTemplateNode.nodeStyle = finalNodeStyle;
+                        return this.createViewTree(gxTemplateContext, nestTemplateInfo.layer, gxNode, gxTemplateNode);
                     } else {
-                        return <View style={nodeStyle} key={layer.id} />;
+                        return <View style={finalNodeStyle} key={gxLayer.id} />;
                     }
                 } else {
                     // 普通层级
-                    if (layer.layers != null && layer.layers != undefined) {
+                    if (gxLayer.layers != null && gxLayer.layers != undefined) {
                         const childArray: ReactNode[] = [];
-                        for (var i = 0; i < layer.layers.length; i++) {
-                            const childLayer = layer.layers[i] as GXJSONObject;
-                            childArray.push(this.createViewTree(gxTemplateContext, childLayer, {
-                                nodeStyle: nodeStyle,
-                            }))
+                        for (var i = 0; i < gxLayer.layers.length; i++) {
+                            const childLayer = gxLayer.layers[i] as GXJSONObject;
+                            gxNode.finalNodeStyle = finalNodeStyle;
+                            childArray.push(this.createViewTree(gxTemplateContext, childLayer, gxNode, null))
                         }
-                        return <View style={nodeStyle} key={layer.id} >
+                        return <View style={finalNodeStyle} key={gxLayer.id} >
                             {childArray}
                         </View>;
                     } else {
-                        return <View style={nodeStyle} key={layer.id} />;
+                        return <View style={finalNodeStyle} key={gxLayer.id} />;
                     }
                 }
             case 'view':
-                if (layer.layers != null && layer.layers != undefined) {
+                if (gxLayer.layers != null && gxLayer.layers != undefined) {
                     const childArray: ReactNode[] = [];
-                    for (var i = 0; i < layer.layers.length; i++) {
-                        const childLayer = layer.layers[i] as GXJSONObject;
-                        childArray.push(this.createViewTree(gxTemplateContext, childLayer, {
-                            nodeStyle: nodeStyle
-                        }))
+                    for (var i = 0; i < gxLayer.layers.length; i++) {
+                        const childLayer = gxLayer.layers[i] as GXJSONObject;
+                        gxNode.finalNodeStyle = finalNodeStyle;
+                        childArray.push(this.createViewTree(gxTemplateContext, childLayer, gxNode, null))
                     }
-                    return <View style={nodeStyle} key={layer.id} >
+                    return <View style={finalNodeStyle} key={gxLayer.id} >
                         {childArray}
                     </View>;
                 }
-                return <View style={nodeStyle} key={layer.id} />;
+                return <View style={finalNodeStyle} key={gxLayer.id} />;
             case 'text':
-                return <Text style={nodeStyle} key={layer.id} > {dataResult} </Text>;
+                return <Text style={finalNodeStyle} key={gxLayer.id} > {dataResult} </Text>;
             case 'richtext':
-                return <Text style={nodeStyle} key={layer.id} > {dataResult} </Text>;
+                return <Text style={finalNodeStyle} key={gxLayer.id} > {dataResult} </Text>;
             case 'iconfont':
-                return <Text style={nodeStyle} key={layer.id} > {dataResult} </Text>;
+                return <Text style={finalNodeStyle} key={gxLayer.id} > {dataResult} </Text>;
             case 'grid':
-                return <View style={nodeStyle} key={layer.id} />;
+                return <View style={finalNodeStyle} key={gxLayer.id} />;
             case 'scroll':
-                return <View style={nodeStyle} key={layer.id} />;
+                return <View style={finalNodeStyle} key={gxLayer.id} />;
             case 'image':
-                return <Image style={nodeStyle} key={layer.id} src={dataResult} />;
+                return <Image style={finalNodeStyle} key={gxLayer.id} src={dataResult} />;
             default:
                 // 不会走到
-                return <View style={nodeStyle} key={layer.id} />;
+                return <View style={finalNodeStyle} key={gxLayer.id} />;
         }
     }
 
-    private updateViewStyleByCss(context: GXTemplateContext, nodeStyle: any, layer: any, nodeCss: any, parentNodeInfo: any) {
+    private updateViewStyleByCss(context: GXTemplateContext, nodeStyle: any, layer: any, nodeCss: any, gxParentNode?: GXNode) {
 
         // Layout
 
@@ -413,12 +322,12 @@ export default class GXViewTreeCreator {
         }
 
         // 特殊处理：如果横向，文字是固定宽度，那么不能被压缩
-        if (parentNodeInfo.nodeStyle.flexDirection == 'row' && width != undefined) {
+        if (gxParentNode != null && gxParentNode.finalNodeStyle.flexDirection == 'row' && width != undefined) {
             nodeStyle.flexShrink = '0';
         }
 
         // 特殊处理：如果竖向, 文字是固定高度，那么不能被压缩
-        if (parentNodeInfo.nodeStyle.flexDirection == 'column' && height != undefined) {
+        if (gxParentNode != null && gxParentNode.finalNodeStyle.flexDirection == 'column' && height != undefined) {
             nodeStyle.flexShrink = '0';
         }
 
@@ -442,7 +351,7 @@ export default class GXViewTreeCreator {
                     if (width == '100%' && (paddingLeft != undefined || paddingRight != undefined)) {
                         nodeStyle.flexShrink = '1';
                         // 若还是垂直布局，那么宽度需要auto
-                        if (parentNodeInfo.nodeStyle.flexDirection == 'column') {
+                        if (gxParentNode != null && gxParentNode.finalNodeStyle.flexDirection == 'column') {
                             nodeStyle.width = 'auto';
                         }
                     }
@@ -584,6 +493,100 @@ export default class GXViewTreeCreator {
         if (borderRadius != undefined) {
             nodeStyle.borderRadius = borderRadius;
         }
+    }
+
+    private createRootStyle(gxMeasureSize: GXMeasureSize): React.CSSProperties {
+        const rootStyle = {
+            display: 'flex',
+            position: 'relative',
+            direction: 'inherit',
+            flexDirection: 'row',
+            flexWrap: 'nowrap',
+            overflow: 'hidden',
+            alignItems: 'stretch',
+            alignSelf: 'auto',
+            alignContent: 'flex-start',
+            justifyContent: 'flex-start',
+            flexShrink: '0',
+            flexGrow: '0',
+            width: '100%',
+            height: 'auto',
+            minWidth: 'auto',
+            minHeight: 'auto',
+            maxWidth: 'auto',
+            maxHeight: 'auto'
+        };
+
+        // 处理外部期望的宽度
+        if (gxMeasureSize.templateWidth != undefined && gxMeasureSize.templateWidth != null) {
+            rootStyle.width = gxMeasureSize.templateWidth + 'px';
+        }
+
+        // 处理外部期望的高度
+        if (gxMeasureSize.templateHeight != undefined && gxMeasureSize.templateHeight != null) {
+            rootStyle.height = gxMeasureSize.templateHeight + 'px';
+        }
+
+        return rootStyle as React.CSSProperties;
+    }
+
+    private createViewStyleByCss(gxTemplateContext: GXTemplateContext, layer: any, nodeCss: any, gxParentNode?: GXNode): React.CSSProperties {
+        let nodeStyle = {
+            display: 'flex',
+            position: "relative",
+            direction: 'inherit',
+            flexDirection: 'row',
+            flexWrap: 'nowrap',
+            overflow: 'hidden',
+            alignItems: 'stretch',
+            alignSelf: 'auto',
+            alignContent: 'flex-start',
+            justifyContent: 'flex-start',
+            flexShrink: '1',
+            flexGrow: '0',
+            // flexBasis: 'auto',
+            // paddingLeft: '0px',
+            // paddingTop: '0px',
+            // paddingRight: '0px',
+            // paddingBottom: '0px',
+            // marginLeft: '0px',
+            // marginTop: '0px',
+            // marginRight: '0px',
+            // marginBottom: '0px',
+            // left: '0px',
+            // top: '0px',
+            // right: '0px',
+            // bottom: '0px',
+            width: 'auto',
+            height: 'auto',
+            minWidth: 'auto',
+            minHeight: 'auto',
+            maxWidth: 'auto',
+            maxHeight: 'auto',
+            // // 无法使用
+            // aspectRatio: '',
+            // // 
+            // backgroundColor: '',
+            // fontSize: '',
+            // fontFamily: 'unset',
+            // color: '',
+            // fontWeight: 'unset',
+            // backgroundImage: 'unset',
+            // maxLines: 'unset',
+            // textOverflow: 'unset',
+            // textAlign: 'unset',
+            // borderColor: 'unset',
+            // borderWidth: '0px',
+            // borderTopLeftRadius: '0px',
+            // borderTopRightRadius: '0px',
+            // borderBottomLeftRadius: '0px',
+            // borderBottomRightRadius: '0px',
+            // lineHeight: '',
+            // textDecoration: '',
+            // mode: '',
+        };
+        this.updateViewStyleByCss(gxTemplateContext, nodeStyle, layer, nodeCss, gxParentNode);
+        return nodeStyle as React.CSSProperties;
     }
 
 }
