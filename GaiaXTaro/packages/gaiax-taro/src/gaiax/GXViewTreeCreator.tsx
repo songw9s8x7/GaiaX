@@ -12,13 +12,14 @@ export default class GXViewTreeCreator {
         this.dataSource = dataSource;
     }
 
-    build(context: GXTemplateContext): ReactNode {
-        let root = {
+    build(gxTemplateContext: GXTemplateContext): ReactNode {
+
+        const rootStyle = {
             display: 'flex',
-            position: "relative",
-            direction: 'inherit',
-            flexDirection: 'row',
-            flexWrap: 'nowrap',
+            // position: 'relative',
+            // direction: 'inherit',
+            // flexDirection: 'row',
+            // flexWrap: 'nowrap',
             overflow: 'hidden',
             alignItems: 'stretch',
             alignSelf: 'auto',
@@ -34,24 +35,27 @@ export default class GXViewTreeCreator {
             maxHeight: 'auto',
         };
 
+        const gxMeasureSize = gxTemplateContext.gxMeasureSize;
+
         // 处理外部期望的宽度
-        if (context.gxMeasureSize.templateWidth != undefined && context.gxMeasureSize.templateWidth != null) {
-            root.width = context.gxMeasureSize.templateWidth + 'px';
+        if (gxMeasureSize.templateWidth != undefined && gxMeasureSize.templateWidth != null) {
+            rootStyle.width = gxMeasureSize.templateWidth + 'px';
         }
         // 处理外部期望的高度
-        if (context.gxMeasureSize.templateHeight != undefined && context.gxMeasureSize.templateHeight != null) {
-            root.height = context.gxMeasureSize.templateHeight + 'px';
+        if (gxMeasureSize.templateHeight != undefined && gxMeasureSize.templateHeight != null) {
+            rootStyle.height = gxMeasureSize.templateHeight + 'px';
         }
 
-        // style={root}
-        return (<View>
+        const gxTemplateInfo = gxTemplateContext.gxTemplateInfo;
+        // 
+        return <View style={rootStyle}>
             {
-                this.createViewByLayer(context, context.gxTemplateInfo.layer, {
+                this.createViewByLayer(gxTemplateContext, gxTemplateInfo.layer, {
                     nodeStyle: {},
                     nodeCss: {},
                 })
             }
-        </View>);
+        </View>;
     }
 
     private createViewStyleByCss(context: GXTemplateContext, layer: any, nodeCss: any, parentNodeInfo: any): any {
