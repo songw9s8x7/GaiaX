@@ -49,16 +49,59 @@ export class GXTemplateNode {
     event: GXJSONObject;
     animation: GXJSONObject;
 
-    isNestRoot(): boolean {
-        return false;
+    isNestChildTemplateType(): boolean {
+        return this.layer['type'] == 'gaia-template'
+            && this.layer['sub-type'] == 'custom'
+            && this.layer['view-class-android'] == null
+            && this.layer['view-class-ios'] == null
     }
 
     isContainerType(): boolean {
-        return false;
+        return this.isScrollType() || this.isGridType() || this.isSliderType();
     }
 
-    isGridType() {
+    isCustomType(): boolean {
+        return false
+    }
+
+    isTextType(): boolean {
+        return this.layer['type'] == 'text'
+    }
+
+    isRichTextType(): boolean {
+        return this.layer['type'] == 'richtext'
+    }
+
+    isIconFontType(): boolean {
+        return this.layer['type'] == 'iconfont'
+    }
+
+    isLottieType(): boolean {
+        return this.layer['type'] == 'lottie'
+    }
+
+    isImageType(): boolean {
+        return this.layer['type'] == 'image'
+    }
+
+    isViewType(): boolean {
+        return this.layer['type'] == 'view' || this.layer['type'] == 'gaia-template' && this.layer['sub-type'] != null
+    }
+
+    isGaiaTemplate(): boolean {
+        return this.layer['type'] == 'gaia-template'
+    }
+
+    isGridType(): boolean {
         return this.layer['type'] == 'gaia-template' && this.layer['sub-type'] == 'grid'
+    }
+
+    isScrollType(): boolean {
+        return this.layer['type'] == 'gaia-template' && this.layer['sub-type'] == 'scroll'
+    }
+
+    isSliderType(): boolean {
+        return this.layer['type'] == 'gaia-template' && this.layer['sub-type'] == 'slider'
     }
 
     static create(gxLayer: GXJSONObject, gxTemplateInfo: GXTemplateInfo): GXTemplateNode {
@@ -83,8 +126,8 @@ export class GXNode {
         return this.gxTemplateNode.isContainerType();
     }
 
-    isNestRoot(): boolean {
-        return this.gxTemplateNode.isNestRoot();
+    isNestChildTemplateType(): boolean {
+        return this.gxTemplateNode.isNestChildTemplateType();
     }
 
     finalNodeStyle: React.CSSProperties;

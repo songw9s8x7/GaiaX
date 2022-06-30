@@ -73,7 +73,7 @@ export default class GXViewTreeCreator {
         // 获取转换后的节点样式
         const finalNodeStyle = this.createViewStyleByCss(gxTemplateContext, gxLayer, finalNodeCss, gxParentNode)
 
-        if (gxNode.isNestRoot()) {
+        if (gxNode.isNestChildTemplateType()) {
 
         } else if (gxNode.isContainerType()) {
 
