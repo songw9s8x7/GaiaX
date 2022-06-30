@@ -2,6 +2,7 @@ import { View, Text, Image } from "@tarojs/components";
 import React, { ReactNode } from "react";
 import GXExpression from "./GXExpression";
 import GXTemplateContext from "./GXTemplateContext";
+import PropTypes, { InferProps } from 'prop-types'
 import { GXMeasureSize, GXTemplateData, GXTemplateItem, IGXDataSource } from "./GXDefine";
 
 export default class GXViewTreeCreator {
@@ -18,23 +19,21 @@ export default class GXViewTreeCreator {
 
         const gxTemplateInfo = gxTemplateContext.gxTemplateInfo;
 
-        return <View style={gxRootStyle}>
-            {
-                this.createViewByLayer(gxTemplateContext, gxTemplateInfo.layer, {
-                    nodeStyle: {},
-                    nodeCss: {},
-                })
-            }
-        </View>;
+        const gxRootView = this.createViewByLayer(gxTemplateContext, gxTemplateInfo.layer, {
+            nodeStyle: {},
+            nodeCss: {},
+        })
+
+        return <View style={gxRootStyle}>{gxRootView}</View>;
     }
 
-    createRootStyle(gxMeasureSize: GXMeasureSize) {
+    private createRootStyle(gxMeasureSize: GXMeasureSize): React.CSSProperties {
         const rootStyle = {
             display: 'flex',
-            // position: 'relative',
-            // direction: 'inherit',
-            // flexDirection: 'row',
-            // flexWrap: 'nowrap',
+            position: 'relative',
+            direction: 'inherit',
+            flexDirection: 'row',
+            flexWrap: 'nowrap',
             overflow: 'hidden',
             alignItems: 'stretch',
             alignSelf: 'auto',
@@ -54,14 +53,16 @@ export default class GXViewTreeCreator {
         if (gxMeasureSize.templateWidth != undefined && gxMeasureSize.templateWidth != null) {
             rootStyle.width = gxMeasureSize.templateWidth + 'px';
         }
+
         // 处理外部期望的高度
         if (gxMeasureSize.templateHeight != undefined && gxMeasureSize.templateHeight != null) {
             rootStyle.height = gxMeasureSize.templateHeight + 'px';
         }
-        return rootStyle;
+
+        return rootStyle as React.CSSProperties;
     }
 
-    private createViewStyleByCss(context: GXTemplateContext, layer: any, nodeCss: any, parentNodeInfo: any): any {
+    private createViewStyleByCss(gxTemplateContext: GXTemplateContext, layer: any, nodeCss: any, parentNodeInfo: any): React.CSSProperties {
         let nodeStyle = {
             display: 'flex',
             position: "relative",
@@ -116,17 +117,19 @@ export default class GXViewTreeCreator {
             // textDecoration: '',
             // mode: '',
         };
-        this.updateViewStyleByCss(context, nodeStyle, layer, nodeCss, parentNodeInfo);
-        return nodeStyle;
+        this.updateViewStyleByCss(gxTemplateContext, nodeStyle, layer, nodeCss, parentNodeInfo);
+        return nodeStyle as React.CSSProperties;
     }
 
-    private createViewByLayer(context: GXTemplateContext, layer: any, parentNodeInfo: any, visualNodeInfo: any = {}): ReactNode {
+    private createViewByLayer(gxTemplateContext: GXTemplateContext, layer: any, parentNodeInfo: any, visualNodeInfo: any = {}): ReactNode {
+
+        const gxTemplateInfo = gxTemplateContext.gxTemplateInfo;
 
         // 获取原始节点样式
-        const nodeRawCss = context.gxTemplateInfo.css["#" + layer.id] || context.gxTemplateInfo.css["." + layer.id]
+        const nodeRawCss = gxTemplateInfo.css["#" + layer.id] || gxTemplateInfo.css["." + layer.id]
 
         // 获取数据绑定
-        const nodeData = context.gxTemplateInfo.data["data"]?.[layer.id];
+        const nodeData = gxTemplateInfo.data["data"]?.[layer.id];
 
         // 获取事件绑定
         // const nodeEvent = context.templateInfo.data["event"];
@@ -138,7 +141,7 @@ export default class GXViewTreeCreator {
             // 获取数据绑定结果
             const nodeValueData = nodeData.value
             if (nodeValueData != undefined) {
-                const nodeValueResult = GXExpression.desireData(nodeValueData, context.gxTemplateData.templateData)
+                const nodeValueResult = GXExpression.desireData(nodeValueData, gxTemplateContext.gxTemplateData.templateData)
                 if (nodeValueResult != null) {
                     dataResult = nodeValueResult;
                 }
@@ -147,7 +150,7 @@ export default class GXViewTreeCreator {
             // 获取样式绑定的结果
             const nodeExtendData = nodeData.extend
             if (nodeExtendData != undefined) {
-                const nodeExtendResult = GXExpression.desireData(nodeExtendData, context.gxTemplateData.templateData)
+                const nodeExtendResult = GXExpression.desireData(nodeExtendData, gxTemplateContext.gxTemplateData.templateData)
                 if (nodeExtendResult != null) {
                     nodeExtendRawCss = nodeExtendResult;
                 }
@@ -164,7 +167,7 @@ export default class GXViewTreeCreator {
         const nodeCss = Object.assign({}, nodeRawCss, nodeExtendRawCss, parentRawCss);
 
         // 获取转换后的节点样式
-        const nodeStyle = this.createViewStyleByCss(context, layer, nodeCss, parentNodeInfo)
+        const nodeStyle = this.createViewStyleByCss(gxTemplateContext, layer, nodeCss, parentNodeInfo)
 
         console.log({
             id: layer.id,
@@ -178,7 +181,7 @@ export default class GXViewTreeCreator {
             case 'gaia-template':
                 if (layer['sub-type'] == 'custom') {
                     const nestTemplateItem = new GXTemplateItem();
-                    nestTemplateItem.templateBiz = context.gxTemplateItem.templateBiz;
+                    nestTemplateItem.templateBiz = gxTemplateContext.gxTemplateItem.templateBiz;
                     nestTemplateItem.templateId = layer.id;
                     const nestTemplateInfo = this.dataSource.getTemplateInfo(nestTemplateItem);
                     const measureSize = new GXMeasureSize();
@@ -203,7 +206,7 @@ export default class GXViewTreeCreator {
                         const childArray: ReactNode[] = [];
                         for (var i = 0; i < layer.layers.length; i++) {
                             const childLayer = layer.layers[i];
-                            childArray.push(this.createViewByLayer(context, childLayer, {
+                            childArray.push(this.createViewByLayer(gxTemplateContext, childLayer, {
                                 nodeStyle: nodeStyle,
                             }))
                         }
@@ -219,7 +222,7 @@ export default class GXViewTreeCreator {
                     const childArray: ReactNode[] = [];
                     for (var i = 0; i < layer.layers.length; i++) {
                         const childLayer = layer.layers[i];
-                        childArray.push(this.createViewByLayer(context, childLayer, {
+                        childArray.push(this.createViewByLayer(gxTemplateContext, childLayer, {
                             nodeStyle: nodeStyle
                         }))
                     }
