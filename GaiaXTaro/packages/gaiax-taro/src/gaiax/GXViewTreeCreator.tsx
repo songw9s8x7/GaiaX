@@ -14,6 +14,21 @@ export default class GXViewTreeCreator {
 
     build(gxTemplateContext: GXTemplateContext): ReactNode {
 
+        const gxRootStyle = this.createRootStyle(gxTemplateContext.gxMeasureSize)
+
+        const gxTemplateInfo = gxTemplateContext.gxTemplateInfo;
+
+        return <View style={gxRootStyle}>
+            {
+                this.createViewByLayer(gxTemplateContext, gxTemplateInfo.layer, {
+                    nodeStyle: {},
+                    nodeCss: {},
+                })
+            }
+        </View>;
+    }
+
+    createRootStyle(gxMeasureSize: GXMeasureSize) {
         const rootStyle = {
             display: 'flex',
             // position: 'relative',
@@ -32,10 +47,8 @@ export default class GXViewTreeCreator {
             minWidth: 'auto',
             minHeight: 'auto',
             maxWidth: 'auto',
-            maxHeight: 'auto',
+            maxHeight: 'auto'
         };
-
-        const gxMeasureSize = gxTemplateContext.gxMeasureSize;
 
         // 处理外部期望的宽度
         if (gxMeasureSize.templateWidth != undefined && gxMeasureSize.templateWidth != null) {
@@ -45,17 +58,7 @@ export default class GXViewTreeCreator {
         if (gxMeasureSize.templateHeight != undefined && gxMeasureSize.templateHeight != null) {
             rootStyle.height = gxMeasureSize.templateHeight + 'px';
         }
-
-        const gxTemplateInfo = gxTemplateContext.gxTemplateInfo;
-        // 
-        return <View style={rootStyle}>
-            {
-                this.createViewByLayer(gxTemplateContext, gxTemplateInfo.layer, {
-                    nodeStyle: {},
-                    nodeCss: {},
-                })
-            }
-        </View>;
+        return rootStyle;
     }
 
     private createViewStyleByCss(context: GXTemplateContext, layer: any, nodeCss: any, parentNodeInfo: any): any {
