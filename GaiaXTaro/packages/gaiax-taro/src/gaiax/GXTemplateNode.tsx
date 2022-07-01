@@ -1,5 +1,6 @@
 import GXCssConvertStyle from "./GXCssConvertStyle";
 import GXDataBinding from "./GXDatabinding";
+import GXExpression from "./GXExpression";
 import { GXJSONObject } from "./GXJson";
 import { GXNode } from "./GXNode";
 import GXTemplateContext from "./GXTemplateContext";
@@ -10,6 +11,14 @@ import GXTemplateInfo from "./GXTemplateInfo";
  */
 export default class GXTemplateNode {
 
+    getExtend(gxTemplateData?: GXJSONObject): GXJSONObject {
+        return GXDataBinding.getExtend(this.data, gxTemplateData);
+    }
+
+    getData(gxTemplateData?: GXJSONObject): GXJSONObject {
+        return GXDataBinding.getData(this.data, gxTemplateData);
+    }
+
     initFinal(
         gxTemplateContext: GXTemplateContext,
         gxTemplateData?: GXJSONObject,
@@ -18,7 +27,7 @@ export default class GXTemplateNode {
     ) {
 
         // 获取样式绑定的结果
-        const extendCssData = GXDataBinding.getExtend(this.data?.extend as GXJSONObject, gxTemplateData);
+        const extendCssData = this.getExtend(gxTemplateData);
 
         let selfFinalCss = {};
         if (extendCssData != null) {

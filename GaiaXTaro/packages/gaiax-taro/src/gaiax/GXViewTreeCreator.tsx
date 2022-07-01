@@ -6,6 +6,7 @@ import GXTemplateNode from "./GXTemplateNode";
 import GXCssConvertStyle from "./GXCssConvertStyle";
 import GXTemplateInfo from "./GXTemplateInfo";
 import { GXJSONArray, GXJSONObject } from "./GXJson";
+import GXDataBinding from "./GXDatabinding";
 
 export default class GXViewTreeCreator {
 
@@ -45,8 +46,6 @@ export default class GXViewTreeCreator {
 
         gxParentNode?.gxChildren?.push(gxNode);
 
-        const dataResult = '';
-
         if (gxNode.gxTemplateNode.isNestChildTemplateType()) {
 
             const gxChildTemplateInfo = gxTemplateInfo.getChildTemplate(gxLayer.id);
@@ -62,9 +61,12 @@ export default class GXViewTreeCreator {
                 }
                 // 普通模板嵌套的子模板根节点，可能是普通模板也可能是容器模板
                 else {
+
+                    const gxChildTemplateData = gxChildVisualTemplateNode.getData(gxTemplateData);
+
                     return this.createView(
                         gxTemplateContext,
-                        gxTemplateData,
+                        gxChildTemplateData,
                         gxChildTemplateInfo,
                         gxChildLayer,
                         gxNode,
@@ -82,6 +84,7 @@ export default class GXViewTreeCreator {
             // case 'scroll':
             // return <View style={finalNodeStyle} key={gxLayer.id} />;
         } else if (gxNode.gxTemplateNode.isViewType() || gxNode.gxTemplateNode.isGaiaTemplate()) {
+
             gxNode.gxTemplateNode.initFinal(gxTemplateContext, gxTemplateData, null, gxNode);
 
             const childArray: ReactNode[] = [];
@@ -104,13 +107,14 @@ export default class GXViewTreeCreator {
                 {childArray}
             </View>;
         } else if (gxNode.gxTemplateNode.isTextType()) {
-            return <Text style={gxNode.gxTemplateNode.finalStyle} key={gxNode.id} > {dataResult} </Text>;
+            const data = gxNode.gxTemplateNode.getData(gxTemplateData);
+            return <Text style={gxNode.gxTemplateNode.finalStyle} key={gxNode.id} > {data.value} </Text>;
         } else if (gxNode.gxTemplateNode.isRichTextType()) {
-            return <Text style={gxNode.gxTemplateNode.finalStyle} key={gxNode.id} > {dataResult} </Text>;
+            return <Text style={gxNode.gxTemplateNode.finalStyle} key={gxNode.id} > {'GaiaX'} </Text>;
         } else if (gxNode.gxTemplateNode.isIconFontType()) {
-            return <Text style={gxNode.gxTemplateNode.finalStyle} key={gxNode.id} > {dataResult} </Text>;
+            return <Text style={gxNode.gxTemplateNode.finalStyle} key={gxNode.id} > {'GaiaX'} </Text>;
         } else if (gxNode.gxTemplateNode.isImageType()) {
-            return <Image style={gxNode.gxTemplateNode.finalStyle} key={gxNode.id} src={dataResult} />;
+            return <Image style={gxNode.gxTemplateNode.finalStyle} key={gxNode.id} src={'GaiaX'} />;
         } else {
             return < View style={gxNode.gxTemplateNode.finalStyle} key={gxNode.id} />
         }
