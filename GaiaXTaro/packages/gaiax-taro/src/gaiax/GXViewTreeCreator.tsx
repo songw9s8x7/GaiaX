@@ -75,19 +75,19 @@ export default class GXViewTreeCreator {
                     childArray.push(childView);
                 }
             }
-            return <View style={gxNode.gxTemplateNode.finalRectCss} key={gxNode.id} >
+            return <View style={gxNode.gxTemplateNode.finalStyle} key={gxNode.id} >
                 {childArray}
             </View>;
         } else if (gxNode.gxTemplateNode.isTextType()) {
-            return <Text style={gxNode.gxTemplateNode.finalRectCss} key={gxNode.id} > {dataResult} </Text>;
+            return <Text style={gxNode.gxTemplateNode.finalStyle} key={gxNode.id} > {dataResult} </Text>;
         } else if (gxNode.gxTemplateNode.isRichTextType()) {
-            return <Text style={gxNode.gxTemplateNode.finalRectCss} key={gxNode.id} > {dataResult} </Text>;
+            return <Text style={gxNode.gxTemplateNode.finalStyle} key={gxNode.id} > {dataResult} </Text>;
         } else if (gxNode.gxTemplateNode.isIconFontType()) {
-            return <Text style={gxNode.gxTemplateNode.finalRectCss} key={gxNode.id} > {dataResult} </Text>;
+            return <Text style={gxNode.gxTemplateNode.finalStyle} key={gxNode.id} > {dataResult} </Text>;
         } else if (gxNode.gxTemplateNode.isImageType()) {
-            return <Image style={gxNode.gxTemplateNode.finalRectCss} key={gxNode.id} src={dataResult} />;
+            return <Image style={gxNode.gxTemplateNode.finalStyle} key={gxNode.id} src={dataResult} />;
         } else {
-            return < View style={gxNode.gxTemplateNode.finalRectCss} key={gxNode.id} />
+            return < View style={gxNode.gxTemplateNode.finalStyle} key={gxNode.id} />
         }
 
         // switch (gxLayer.type) {
