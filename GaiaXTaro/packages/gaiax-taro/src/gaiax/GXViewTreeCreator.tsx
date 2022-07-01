@@ -72,9 +72,7 @@ export default class GXViewTreeCreator {
         const finalNodeCss = Object.assign({}, gxNode.gxTemplateNode.css, nodeExtendRawCss, gxVisualTemplateNode?.finalNodeCss || {});
 
         // 获取转换后的节点样式
-        const finalNodeStyle = this.createViewStyleByCss(gxTemplateContext, gxLayer, finalNodeCss, gxParentNode)
-
-        gxNode.finalNodeStyle = finalNodeStyle;
+        gxNode.finalNodeStyle = this.createViewStyleByCss(gxTemplateContext, gxLayer, finalNodeCss, gxParentNode);
 
         console.log(`node type=${gxNode.gxTemplateNode.type()}`);
 
@@ -99,19 +97,19 @@ export default class GXViewTreeCreator {
                     childArray.push(childView);
                 }
             }
-            return <View style={finalNodeStyle} key={gxNode.id} >
+            return <View style={gxNode.finalNodeStyle} key={gxNode.id} >
                 {childArray}
             </View>;
         } else if (gxNode.gxTemplateNode.isTextType()) {
-            return <Text style={finalNodeStyle} key={gxNode.id} > {dataResult} </Text>;
+            return <Text style={gxNode.finalNodeStyle} key={gxNode.id} > {dataResult} </Text>;
         } else if (gxNode.gxTemplateNode.isRichTextType()) {
-            return <Text style={finalNodeStyle} key={gxNode.id} > {dataResult} </Text>;
+            return <Text style={gxNode.finalNodeStyle} key={gxNode.id} > {dataResult} </Text>;
         } else if (gxNode.gxTemplateNode.isIconFontType()) {
-            return <Text style={finalNodeStyle} key={gxNode.id} > {dataResult} </Text>;
+            return <Text style={gxNode.finalNodeStyle} key={gxNode.id} > {dataResult} </Text>;
         } else if (gxNode.gxTemplateNode.isImageType()) {
-            return <Image style={finalNodeStyle} key={gxNode.id} src={dataResult} />;
+            return <Image style={gxNode.finalNodeStyle} key={gxNode.id} src={dataResult} />;
         } else {
-            return < View style={finalNodeStyle} key={gxNode.id} />
+            return < View style={gxNode.finalNodeStyle} key={gxNode.id} />
         }
 
         // switch (gxLayer.type) {

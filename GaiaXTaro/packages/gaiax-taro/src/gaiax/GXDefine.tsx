@@ -179,9 +179,10 @@ export class GXTemplateNode {
 
 export class GXNode {
 
-    finalNodeStyle: React.CSSProperties;
     nodeCss: any;
 
+    finalNodeStyle: React.CSSProperties;
+    
     gxTemplateNode: GXTemplateNode;
 
     id: string = '';
