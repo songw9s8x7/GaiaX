@@ -83,7 +83,7 @@ export default class Index extends Component<IParams> {
 
       const constraintSize = JSON.parse(template["index.json"])?.["package"]?.["constraint-size"]
       let measureSize = new GXMeasureSize();
-      measureSize.templateWidth = constraintSize?.['width']
+      measureSize.templateWidth = constraintSize?.['width'] || 375
       measureSize.templateHeight = constraintSize?.['height']
 
       return (

@@ -47,9 +47,33 @@ export default class GXViewTreeCreator {
 
         const dataResult = '';
 
-        console.log(`node type=${gxNode.gxTemplateNode.type()}`);
-
         if (gxNode.gxTemplateNode.isNestChildTemplateType()) {
+
+            const gxChildTemplateInfo = gxTemplateInfo.getChildTemplate(gxLayer.id);
+
+            if (gxChildTemplateInfo != null && gxChildTemplateInfo != undefined) {
+
+                const gxChildVisualTemplateNode = GXTemplateNode.create(gxLayer.id, gxTemplateInfo);
+
+                const gxChildLayer = gxChildTemplateInfo.layer;
+
+                // 容器模板下的子模板
+                if (gxNode.gxTemplateNode.isContainerType()) {
+                }
+                // 普通模板嵌套的子模板根节点，可能是普通模板也可能是容器模板
+                else {
+                    return this.createView(
+                        gxTemplateContext,
+                        gxTemplateData,
+                        gxChildTemplateInfo,
+                        gxChildLayer,
+                        gxNode,
+                        gxChildVisualTemplateNode
+                    );
+                }
+            } else {
+                return <View style={gxNode.gxTemplateNode.finalStyle} key={gxNode.id} />;
+            }
 
         } else if (gxNode.gxTemplateNode.isContainerType()) {
 

@@ -7,6 +7,17 @@ import GXTemplateNode from "./GXTemplateNode";
 
 export default class GXTemplateInfo {
 
+    getChildTemplate(id: string): GXTemplateInfo {
+        if (this.children != null) {
+            for (const gxTemplateInfo of this.children) {
+                if (gxTemplateInfo.layer.id == id) {
+                    return gxTemplateInfo;
+                }
+            }
+        }
+        return null;
+    }
+
     static createByGXTemplateItem(gxTemplateItem: GXTemplateItem): GXTemplateInfo {
         const gxTemplate = GXEngineInstance.gxData.gxTemplateSource.getTemplate(gxTemplateItem);
         const gxTemplateInfo = this.createByGXTemplate(gxTemplate);
