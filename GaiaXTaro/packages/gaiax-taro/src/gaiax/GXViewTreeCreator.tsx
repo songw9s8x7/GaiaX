@@ -3,7 +3,7 @@ import React, { ReactNode } from "react";
 import GXExpression from "./GXExpression";
 import GXTemplateContext from "./GXTemplateContext";
 import PropTypes, { InferProps } from 'prop-types'
-import { GXMeasureSize, GXTemplateData, GXTemplateItem, IGXDataSource, GXJSONObject, GXJSONValue, GXTemplateNode, GXNode } from "./GXDefine";
+import { GXMeasureSize, GXTemplateData, GXTemplateItem, IGXDataSource, GXJSONObject, GXJSONValue, GXTemplateNode, GXNode, GXJSONArray } from "./GXDefine";
 
 export default class GXViewTreeCreator {
 
@@ -21,12 +21,12 @@ export default class GXViewTreeCreator {
 
         const gxVisualTemplateNode = gxTemplateContext.gxVisualTemplateNode;
 
-        const gxRootView = this.createViewTree(gxTemplateContext, gxTemplateInfo.layer, null, gxVisualTemplateNode)
+        const gxRootView = this.createView(gxTemplateContext, gxTemplateInfo.layer, null, gxVisualTemplateNode)
 
         return <View style={gxRootStyle}>{gxRootView}</View>;
     }
 
-    private createViewTree(
+    private createView(
         gxTemplateContext: GXTemplateContext,
         gxLayer: GXJSONObject,
         gxParentNode?: GXNode,
@@ -41,7 +41,28 @@ export default class GXViewTreeCreator {
 
         gxNode.gxTemplateNode = GXTemplateNode.create(gxLayer, gxTemplateInfo);
 
-        gxParentNode?.gxChildren?.push(gxNode)
+        gxParentNode?.gxChildren?.push(gxNode);
+
+        const layers = gxLayer['layers'] as GXJSONArray;
+
+        if (layers != null) {
+            for (const target of layers) {
+                const childLayer = target as GXJSONObject;
+
+                // 嵌套的子模板节点类型
+                if (GXTemplateNode.isNestChildTemplateType(childLayer)) {
+
+                }
+                // 容器节点类型
+                else if (GXTemplateNode.isContainerType(childLayer)) {
+
+                }
+                // 普通节点类型
+                else {
+
+                }
+            }
+        }
 
         let nodeExtendRawCss = {};
         let dataResult = '';
@@ -73,14 +94,6 @@ export default class GXViewTreeCreator {
         // 获取转换后的节点样式
         const finalNodeStyle = this.createViewStyleByCss(gxTemplateContext, gxLayer, finalNodeCss, gxParentNode)
 
-        if (gxNode.isNestChildTemplateType()) {
-
-        } else if (gxNode.isContainerType()) {
-
-        } else {
-
-        }
-
         switch (gxLayer.type) {
             case 'gaia-template':
                 if (gxLayer['sub-type'] == 'custom') {
@@ -98,7 +111,7 @@ export default class GXViewTreeCreator {
                         const gxTemplateNode = new GXTemplateNode();
                         gxTemplateNode.finalNodeCss = finalNodeCss;
                         gxTemplateNode.finalNodeStyle = finalNodeStyle;
-                        return this.createViewTree(gxTemplateContext, nestTemplateInfo.layer, gxNode, gxTemplateNode);
+                        return this.createView(gxTemplateContext, nestTemplateInfo.layer, gxNode, gxTemplateNode);
                     } else {
                         return <View style={finalNodeStyle} key={gxLayer.id} />;
                     }
@@ -109,7 +122,7 @@ export default class GXViewTreeCreator {
                         for (var i = 0; i < gxLayer.layers.length; i++) {
                             const childLayer = gxLayer.layers[i] as GXJSONObject;
                             gxNode.finalNodeStyle = finalNodeStyle;
-                            childArray.push(this.createViewTree(gxTemplateContext, childLayer, gxNode, null))
+                            childArray.push(this.createView(gxTemplateContext, childLayer, gxNode, null))
                         }
                         return <View style={finalNodeStyle} key={gxLayer.id} >
                             {childArray}
@@ -124,7 +137,7 @@ export default class GXViewTreeCreator {
                     for (var i = 0; i < gxLayer.layers.length; i++) {
                         const childLayer = gxLayer.layers[i] as GXJSONObject;
                         gxNode.finalNodeStyle = finalNodeStyle;
-                        childArray.push(this.createViewTree(gxTemplateContext, childLayer, gxNode, null))
+                        childArray.push(this.createView(gxTemplateContext, childLayer, gxNode, null))
                     }
                     return <View style={finalNodeStyle} key={gxLayer.id} >
                         {childArray}

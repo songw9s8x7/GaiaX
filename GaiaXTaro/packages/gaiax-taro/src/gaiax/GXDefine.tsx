@@ -50,58 +50,111 @@ export class GXTemplateNode {
     animation: GXJSONObject;
 
     isNestChildTemplateType(): boolean {
-        return this.layer['type'] == 'gaia-template'
-            && this.layer['sub-type'] == 'custom'
-            && this.layer['view-class-android'] == null
-            && this.layer['view-class-ios'] == null
+        return GXTemplateNode.isNestChildTemplateType(this.layer);
     }
 
     isContainerType(): boolean {
-        return this.isScrollType() || this.isGridType() || this.isSliderType();
+        return GXTemplateNode.isContainerType(this.layer);
     }
 
     isCustomType(): boolean {
-        return false
+        return GXTemplateNode.isCustomType(this.layer);
     }
 
     isTextType(): boolean {
-        return this.layer['type'] == 'text'
+        return GXTemplateNode.isTextType(this.layer);
     }
 
     isRichTextType(): boolean {
-        return this.layer['type'] == 'richtext'
+        return GXTemplateNode.isRichTextType(this.layer);
     }
 
     isIconFontType(): boolean {
-        return this.layer['type'] == 'iconfont'
+        return GXTemplateNode.isIconFontType(this.layer);
     }
 
     isLottieType(): boolean {
-        return this.layer['type'] == 'lottie'
+        return GXTemplateNode.isLottieType(this.layer);
     }
 
     isImageType(): boolean {
-        return this.layer['type'] == 'image'
+        return GXTemplateNode.isImageType(this.layer);
     }
 
     isViewType(): boolean {
-        return this.layer['type'] == 'view' || this.layer['type'] == 'gaia-template' && this.layer['sub-type'] != null
+        return GXTemplateNode.isViewType(this.layer);
     }
 
     isGaiaTemplate(): boolean {
-        return this.layer['type'] == 'gaia-template'
+        return GXTemplateNode.isGaiaTemplate(this.layer);
     }
 
     isGridType(): boolean {
-        return this.layer['type'] == 'gaia-template' && this.layer['sub-type'] == 'grid'
+        return GXTemplateNode.isGridType(this.layer);
     }
 
     isScrollType(): boolean {
-        return this.layer['type'] == 'gaia-template' && this.layer['sub-type'] == 'scroll'
+        return GXTemplateNode.isScrollType(this.layer);
     }
 
     isSliderType(): boolean {
-        return this.layer['type'] == 'gaia-template' && this.layer['sub-type'] == 'slider'
+        return GXTemplateNode.isSliderType(this.layer);
+    }
+
+    static isNestChildTemplateType(layer: GXJSONObject): boolean {
+        return layer != null &&
+            layer['type'] == 'gaia-template'
+            && layer['sub-type'] == 'custom'
+            && layer['view-class-android'] == null
+            && layer['view-class-ios'] == null
+    }
+
+    static isContainerType(layer: GXJSONObject): boolean {
+        return layer != null && GXTemplateNode.isScrollType(layer) || GXTemplateNode.isGridType(layer) || GXTemplateNode.isSliderType(layer);
+    }
+
+    static isCustomType(layer: GXJSONObject): boolean {
+        return false
+    }
+
+    static isTextType(layer: GXJSONObject): boolean {
+        return layer != null && layer['type'] == 'text'
+    }
+
+    static isRichTextType(layer: GXJSONObject): boolean {
+        return layer != null && layer['type'] == 'richtext'
+    }
+
+    static isIconFontType(layer: GXJSONObject): boolean {
+        return layer != null && layer['type'] == 'iconfont'
+    }
+
+    static isLottieType(layer: GXJSONObject): boolean {
+        return layer != null && layer['type'] == 'lottie'
+    }
+
+    static isImageType(layer: GXJSONObject): boolean {
+        return layer != null && layer['type'] == 'image'
+    }
+
+    static isViewType(layer: GXJSONObject): boolean {
+        return layer != null && layer['type'] == 'view' || layer['type'] == 'gaia-template' && layer['sub-type'] != null
+    }
+
+    static isGaiaTemplate(layer: GXJSONObject): boolean {
+        return layer != null && layer['type'] == 'gaia-template'
+    }
+
+    static isGridType(layer: GXJSONObject): boolean {
+        return layer != null && layer['type'] == 'gaia-template' && layer['sub-type'] == 'grid'
+    }
+
+    static isScrollType(layer: GXJSONObject): boolean {
+        return layer != null && layer['type'] == 'gaia-template' && layer['sub-type'] == 'scroll'
+    }
+
+    static isSliderType(layer: GXJSONObject): boolean {
+        return layer != null && layer['type'] == 'gaia-template' && layer['sub-type'] == 'slider'
     }
 
     static create(gxLayer: GXJSONObject, gxTemplateInfo: GXTemplateInfo): GXTemplateNode {
