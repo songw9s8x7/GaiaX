@@ -4,6 +4,7 @@ import GXExpression from "./GXExpression";
 import GXTemplateContext from "./GXTemplateContext";
 import PropTypes, { InferProps } from 'prop-types'
 import { GXMeasureSize, GXTemplateData, GXTemplateItem, IGXDataSource, GXJSONObject, GXJSONValue, GXTemplateNode, GXNode, GXJSONArray } from "./GXDefine";
+import { logDOM } from "@testing-library/react";
 
 export default class GXViewTreeCreator {
 
@@ -43,27 +44,6 @@ export default class GXViewTreeCreator {
 
         gxParentNode?.gxChildren?.push(gxNode);
 
-        const layers = gxLayer['layers'] as GXJSONArray;
-
-        if (layers != null) {
-            for (const target of layers) {
-                const childLayer = target as GXJSONObject;
-
-                // 嵌套的子模板节点类型
-                if (GXTemplateNode.isNestChildTemplateType(childLayer)) {
-
-                }
-                // 容器节点类型
-                else if (GXTemplateNode.isContainerType(childLayer)) {
-
-                }
-                // 普通节点类型
-                else {
-
-                }
-            }
-        }
-
         let nodeExtendRawCss = {};
         let dataResult = '';
         if (typeof gxNode.gxTemplateNode.data == 'object') {
@@ -94,72 +74,87 @@ export default class GXViewTreeCreator {
         // 获取转换后的节点样式
         const finalNodeStyle = this.createViewStyleByCss(gxTemplateContext, gxLayer, finalNodeCss, gxParentNode)
 
-        switch (gxLayer.type) {
-            case 'gaia-template':
-                if (gxLayer['sub-type'] == 'custom') {
-                    const nestTemplateItem = new GXTemplateItem();
-                    nestTemplateItem.templateBiz = gxTemplateContext.gxTemplateItem.templateBiz;
-                    nestTemplateItem.templateId = gxLayer.id;
-                    const nestTemplateInfo = this.dataSource.getTemplateInfo(nestTemplateItem);
-                    const measureSize = new GXMeasureSize();
-                    const nestTemplateData = new GXTemplateData();
-                    if (nestTemplateInfo != null && nestTemplateInfo != undefined) {
-                        let gxTemplateContext = new GXTemplateContext(nestTemplateItem, nestTemplateData, measureSize, nestTemplateInfo);
-                        gxTemplateContext.isNestChildTemplate = true;
-                        gxNode.finalNodeStyle = gxParentNode.finalNodeStyle;
-                        gxNode.nodeCss = gxParentNode.nodeCss;
-                        const gxTemplateNode = new GXTemplateNode();
-                        gxTemplateNode.finalNodeCss = finalNodeCss;
-                        gxTemplateNode.finalNodeStyle = finalNodeStyle;
-                        return this.createView(gxTemplateContext, nestTemplateInfo.layer, gxNode, gxTemplateNode);
-                    } else {
-                        return <View style={finalNodeStyle} key={gxLayer.id} />;
-                    }
-                } else {
-                    // 普通层级
-                    if (gxLayer.layers != null && gxLayer.layers != undefined) {
-                        const childArray: ReactNode[] = [];
-                        for (var i = 0; i < gxLayer.layers.length; i++) {
-                            const childLayer = gxLayer.layers[i] as GXJSONObject;
-                            gxNode.finalNodeStyle = finalNodeStyle;
-                            childArray.push(this.createView(gxTemplateContext, childLayer, gxNode, null))
-                        }
-                        return <View style={finalNodeStyle} key={gxLayer.id} >
-                            {childArray}
-                        </View>;
-                    } else {
-                        return <View style={finalNodeStyle} key={gxLayer.id} />;
-                    }
+        gxNode.finalNodeStyle = finalNodeStyle;
+
+        console.log(`node type=${gxNode.gxTemplateNode.type()}`);
+
+        if (gxNode.gxTemplateNode.isNestChildTemplateType()) {
+
+
+        } else if (gxNode.gxTemplateNode.isContainerType()) {
+
+            // case 'grid':
+            // return <View style={finalNodeStyle} key={gxLayer.id} />;
+            // case 'scroll':
+            // return <View style={finalNodeStyle} key={gxLayer.id} />;
+        } else if (gxNode.gxTemplateNode.isViewType() || gxNode.gxTemplateNode.isGaiaTemplate()) {
+            const childArray: ReactNode[] = [];
+            const layers = gxLayer['layers'] as GXJSONArray;
+            if (layers != null) {
+                for (const target of layers) {
+                    const childLayer = target as GXJSONObject;
+                    console.log(childLayer);
+                    // 不需要传递虚拟节点
+                    const childView = this.createView(gxTemplateContext, childLayer, gxNode, null);
+                    childArray.push(childView);
                 }
-            case 'view':
-                if (gxLayer.layers != null && gxLayer.layers != undefined) {
-                    const childArray: ReactNode[] = [];
-                    for (var i = 0; i < gxLayer.layers.length; i++) {
-                        const childLayer = gxLayer.layers[i] as GXJSONObject;
-                        gxNode.finalNodeStyle = finalNodeStyle;
-                        childArray.push(this.createView(gxTemplateContext, childLayer, gxNode, null))
-                    }
-                    return <View style={finalNodeStyle} key={gxLayer.id} >
-                        {childArray}
-                    </View>;
-                }
-                return <View style={finalNodeStyle} key={gxLayer.id} />;
-            case 'text':
-                return <Text style={finalNodeStyle} key={gxLayer.id} > {dataResult} </Text>;
-            case 'richtext':
-                return <Text style={finalNodeStyle} key={gxLayer.id} > {dataResult} </Text>;
-            case 'iconfont':
-                return <Text style={finalNodeStyle} key={gxLayer.id} > {dataResult} </Text>;
-            case 'grid':
-                return <View style={finalNodeStyle} key={gxLayer.id} />;
-            case 'scroll':
-                return <View style={finalNodeStyle} key={gxLayer.id} />;
-            case 'image':
-                return <Image style={finalNodeStyle} key={gxLayer.id} src={dataResult} />;
-            default:
-                // 不会走到
-                return <View style={finalNodeStyle} key={gxLayer.id} />;
+            }
+            return <View style={finalNodeStyle} key={gxNode.id} >
+                {childArray}
+            </View>;
+        } else if (gxNode.gxTemplateNode.isTextType()) {
+            return <Text style={finalNodeStyle} key={gxNode.id} > {dataResult} </Text>;
+        } else if (gxNode.gxTemplateNode.isRichTextType()) {
+            return <Text style={finalNodeStyle} key={gxNode.id} > {dataResult} </Text>;
+        } else if (gxNode.gxTemplateNode.isIconFontType()) {
+            return <Text style={finalNodeStyle} key={gxNode.id} > {dataResult} </Text>;
+        } else if (gxNode.gxTemplateNode.isImageType()) {
+            return <Image style={finalNodeStyle} key={gxNode.id} src={dataResult} />;
+        } else {
+            return < View style={finalNodeStyle} key={gxNode.id} />
         }
+
+        // switch (gxLayer.type) {
+        //     case 'gaia-template':
+        //         if (gxLayer['sub-type'] == 'custom') {
+        //             const nestTemplateItem = new GXTemplateItem();
+        //             nestTemplateItem.templateBiz = gxTemplateContext.gxTemplateItem.templateBiz;
+        //             nestTemplateItem.templateId = gxLayer.id;
+        //             const nestTemplateInfo = this.dataSource.getTemplateInfo(nestTemplateItem);
+        //             const measureSize = new GXMeasureSize();
+        //             const nestTemplateData = new GXTemplateData();
+        //             if (nestTemplateInfo != null && nestTemplateInfo != undefined) {
+        //                 let gxTemplateContext = new GXTemplateContext(nestTemplateItem, nestTemplateData, measureSize, nestTemplateInfo);
+        //                 gxTemplateContext.isNestChildTemplate = true;
+        //                 gxNode.finalNodeStyle = gxParentNode.finalNodeStyle;
+        //                 gxNode.nodeCss = gxParentNode.nodeCss;
+        //                 const gxTemplateNode = new GXTemplateNode();
+        //                 gxTemplateNode.finalNodeCss = finalNodeCss;
+        //                 gxTemplateNode.finalNodeStyle = finalNodeStyle;
+        //                 return this.createView(gxTemplateContext, nestTemplateInfo.layer, gxNode, gxTemplateNode);
+        //             } else {
+        //                 return <View style={finalNodeStyle} key={gxLayer.id} />;
+        //             }
+        //         } else {
+        //             // 普通层级
+        //             if (gxLayer.layers != null && gxLayer.layers != undefined) {
+        //                 const childArray: ReactNode[] = [];
+        //                 for (var i = 0; i < gxLayer.layers.length; i++) {
+        //                     const childLayer = gxLayer.layers[i] as GXJSONObject;
+        //                     gxNode.finalNodeStyle = finalNodeStyle;
+        //                     childArray.push(this.createView(gxTemplateContext, childLayer, gxNode, null))
+        //                 }
+        //                 return <View style={finalNodeStyle} key={gxLayer.id} >
+        //                     {childArray}
+        //                 </View>;
+        //             } else {
+        //                 return <View style={finalNodeStyle} key={gxLayer.id} />;
+        //             }
+        //         }
+        //     default:
+        //         // 不会走到
+        //         return <View style={finalNodeStyle} key={gxLayer.id} />;
+        // }
     }
 
     private updateViewStyleByCss(context: GXTemplateContext, nodeStyle: any, layer: any, nodeCss: any, gxParentNode?: GXNode) {

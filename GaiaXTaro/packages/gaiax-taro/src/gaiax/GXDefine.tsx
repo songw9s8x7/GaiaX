@@ -49,6 +49,10 @@ export class GXTemplateNode {
     event: GXJSONObject;
     animation: GXJSONObject;
 
+    type(): string {
+        return this.layer['type'];
+    }
+
     isNestChildTemplateType(): boolean {
         return GXTemplateNode.isNestChildTemplateType(this.layer);
     }
@@ -174,14 +178,6 @@ export class GXTemplateNode {
 }
 
 export class GXNode {
-
-    isContainerType(): boolean {
-        return this.gxTemplateNode.isContainerType();
-    }
-
-    isNestChildTemplateType(): boolean {
-        return this.gxTemplateNode.isNestChildTemplateType();
-    }
 
     finalNodeStyle: React.CSSProperties;
     nodeCss: any;
