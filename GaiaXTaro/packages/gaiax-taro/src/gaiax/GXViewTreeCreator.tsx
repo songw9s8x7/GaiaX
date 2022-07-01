@@ -42,7 +42,7 @@ export default class GXViewTreeCreator {
 
         gxNode.setIdPath(gxLayer, gxParentNode)
 
-        gxNode.gxTemplateNode = GXTemplateNode.create(gxLayer, gxTemplateInfo);
+        gxNode.gxTemplateNode = GXTemplateNode.create(gxLayer, gxTemplateInfo, gxVisualTemplateNode);
 
         gxParentNode?.gxChildren?.push(gxNode);
 
@@ -52,7 +52,7 @@ export default class GXViewTreeCreator {
 
             if (gxChildTemplateInfo != null && gxChildTemplateInfo != undefined) {
 
-                const gxChildVisualTemplateNode = GXTemplateNode.create(gxLayer.id, gxTemplateInfo);
+                const gxChildVisualTemplateNode = GXTemplateNode.create(gxLayer.id, gxTemplateInfo, null);
 
                 const gxChildLayer = gxChildTemplateInfo.layer;
 
@@ -98,7 +98,7 @@ export default class GXViewTreeCreator {
                         gxTemplateInfo,
                         childLayer,
                         gxNode,
-                        gxVisualTemplateNode
+                        null
                     );
                     childArray.push(childView);
                 }

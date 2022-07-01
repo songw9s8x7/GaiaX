@@ -174,7 +174,7 @@ export default class GXTemplateNode {
         return layer != null && layer['type'] == 'gaia-template' && layer['sub-type'] == 'slider'
     }
 
-    static create(gxLayer: GXJSONObject, gxTemplateInfo: GXTemplateInfo): GXTemplateNode {
+    static create(gxLayer: GXJSONObject, gxTemplateInfo: GXTemplateInfo, gxVisualTemplateNode?: GXTemplateNode): GXTemplateNode {
         const gxTemplateNode = new GXTemplateNode()
         // 获取原始节点的层级
         gxTemplateNode.layer = gxLayer
@@ -186,6 +186,8 @@ export default class GXTemplateNode {
         gxTemplateNode.event = gxTemplateInfo.data['event'];
         // 获取原始节点的动画
         gxTemplateNode.animation = gxTemplateInfo.data['animation'];
+        // 设置虚拟节点
+        gxTemplateNode.gxVisualTemplateNode = gxVisualTemplateNode;
         return gxTemplateNode;
     }
 }
