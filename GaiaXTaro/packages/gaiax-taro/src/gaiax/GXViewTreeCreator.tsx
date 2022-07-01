@@ -2,7 +2,7 @@ import { View, Text, Image } from "@tarojs/components";
 import React, { ReactNode } from "react";
 import GXExpression from "./GXExpression";
 import GXTemplateContext from "./GXTemplateContext";
-import { GXMeasureSize, GXTemplateData, GXTemplateItem, IGXDataSource, GXJSONObject, GXJSONValue, GXJSONArray } from "./GXDefine";
+import { GXMeasureSize, GXTemplateData, GXTemplateItem, IGXDataSource, GXJSONObject, GXJSONValue, GXJSONArray, GXTemplateInfo } from "./GXDefine";
 import { GXNode } from "./GXNode";
 import { GXTemplateNode } from "./GXTemplateNode";
 import GXCssConvertStyle from "./GXCssConvertStyle";
@@ -23,9 +23,13 @@ export default class GXViewTreeCreator {
 
         const gxTemplateInfo = gxTemplateContext.gxTemplateInfo;
 
+        const gxLayer = gxTemplateInfo.layer;
+
+        const gxParentNode = null;
+
         const gxVisualTemplateNode = gxTemplateContext.gxVisualTemplateNode;
 
-        const gxRootView = this.createView(gxTemplateContext, gxTemplateData, gxTemplateInfo.layer, null, gxVisualTemplateNode)
+        const gxRootView = this.createView(gxTemplateContext, gxTemplateData, gxTemplateInfo, gxLayer, gxParentNode, gxVisualTemplateNode)
 
         return <View style={gxRootStyle}>{gxRootView}</View>;
     }
@@ -33,12 +37,11 @@ export default class GXViewTreeCreator {
     private createView(
         gxTemplateContext: GXTemplateContext,
         gxTemplateData: GXJSONObject,
+        gxTemplateInfo: GXTemplateInfo,
         gxLayer: GXJSONObject,
         gxParentNode?: GXNode,
         gxVisualTemplateNode?: GXTemplateNode
     ): ReactNode {
-
-        const gxTemplateInfo = gxTemplateContext.gxTemplateInfo;
 
         const gxNode = GXNode.create();
 
@@ -69,9 +72,14 @@ export default class GXViewTreeCreator {
             if (layers != null) {
                 for (const target of layers) {
                     const childLayer = target as GXJSONObject;
-                    console.log(childLayer);
-                    // 不需要传递虚拟节点
-                    const childView = this.createView(gxTemplateContext, gxTemplateData, childLayer, gxNode, null);
+                    const childView = this.createView(
+                        gxTemplateContext,
+                        gxTemplateData,
+                        gxTemplateInfo,
+                        childLayer,
+                        gxNode,
+                        gxVisualTemplateNode
+                    );
                     childArray.push(childView);
                 }
             }

@@ -16,6 +16,7 @@ export class GXTemplateNode {
         gxVisualTemplateData?: GXJSONObject,
         gxParentNode?: GXNode
     ) {
+
         // 获取样式绑定的结果
         const extendCssData = GXDataBinding.getExtend(this.data?.extend as GXJSONObject, gxTemplateData);
 

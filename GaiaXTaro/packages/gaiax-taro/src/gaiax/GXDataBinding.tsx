@@ -6,6 +6,7 @@ export default class GXDataBinding {
         if (extend != null) {
             return GXExpression.desireData(extend, gxTemplateData) as GXJSONObject
         }
+        return null;
     }
 
 }
