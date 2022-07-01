@@ -1,14 +1,14 @@
 import GXCssConvertStyle from "./GXCssConvertStyle";
 import GXDataBinding from "./GXDatabinding";
-import { GXJSONObject, GXTemplateInfo } from "./GXDefine";
-import GXExpression from "./GXExpression";
+import { GXJSONObject } from "./GXJson";
 import { GXNode } from "./GXNode";
 import GXTemplateContext from "./GXTemplateContext";
+import GXTemplateInfo from "./GXTemplateInfo";
 
 /**
  * 节点的原始样式
  */
-export class GXTemplateNode {
+export default class GXTemplateNode {
 
     initFinal(
         gxTemplateContext: GXTemplateContext,

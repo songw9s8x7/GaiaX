@@ -1,6 +1,7 @@
-import { GXJSONObject, GXMeasureSize } from "./GXDefine";
+import { GXJSONObject } from "./GXJson";
 import { GXNode } from "./GXNode";
 import GXTemplateContext from "./GXTemplateContext";
+import { GXMeasureSize } from "./GXTemplateEngine";
 
 export default class GXCssConvertStyle {
 

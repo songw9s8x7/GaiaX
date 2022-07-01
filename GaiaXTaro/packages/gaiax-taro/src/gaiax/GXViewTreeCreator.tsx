@@ -1,19 +1,13 @@
 import { View, Text, Image } from "@tarojs/components";
 import React, { ReactNode } from "react";
-import GXExpression from "./GXExpression";
 import GXTemplateContext from "./GXTemplateContext";
-import { GXMeasureSize, GXTemplateData, GXTemplateItem, IGXDataSource, GXJSONObject, GXJSONValue, GXJSONArray, GXTemplateInfo } from "./GXDefine";
 import { GXNode } from "./GXNode";
-import { GXTemplateNode } from "./GXTemplateNode";
+import GXTemplateNode from "./GXTemplateNode";
 import GXCssConvertStyle from "./GXCssConvertStyle";
+import GXTemplateInfo from "./GXTemplateInfo";
+import { GXJSONArray, GXJSONObject } from "./GXJson";
 
 export default class GXViewTreeCreator {
-
-    private dataSource: IGXDataSource;
-
-    setDataSource(dataSource: IGXDataSource) {
-        this.dataSource = dataSource;
-    }
 
     build(gxTemplateContext: GXTemplateContext): ReactNode {
 
@@ -56,7 +50,6 @@ export default class GXViewTreeCreator {
         console.log(`node type=${gxNode.gxTemplateNode.type()}`);
 
         if (gxNode.gxTemplateNode.isNestChildTemplateType()) {
-
 
         } else if (gxNode.gxTemplateNode.isContainerType()) {
 

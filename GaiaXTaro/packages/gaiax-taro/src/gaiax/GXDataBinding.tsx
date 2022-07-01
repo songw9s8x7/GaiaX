@@ -1,5 +1,6 @@
-import { GXJSONObject } from "./GXDefine";
+
 import GXExpression from "./GXExpression";
+import { GXJSONObject } from "./GXJson";
 
 export default class GXDataBinding {
     static getExtend(extend?: GXJSONObject, gxTemplateData?: GXJSONObject): GXJSONObject {

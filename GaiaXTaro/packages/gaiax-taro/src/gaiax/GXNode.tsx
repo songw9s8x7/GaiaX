@@ -1,5 +1,5 @@
-import { GXJSONObject } from "./GXDefine";
-import { GXTemplateNode } from "./GXTemplateNode";
+import { GXJSONObject } from "./GXJson";
+import GXTemplateNode from "./GXTemplateNode";
 
 export class GXNode {
 

@@ -1,12 +1,20 @@
 
 import { View } from "@tarojs/components";
 import { Component } from "react";
-import { GXEngineInstance, GXTemplateComponent, IGXDataSource, GXTemplateItem, GXMeasureSize, GXTemplateData, GXTemplateInfo } from "@gaiax/taro";
+import { GXEngineInstance, GXTemplate, GXRegisterCenterInstance, GXTemplateComponent, GXTemplateItem, GXMeasureSize, GXTemplateData, GXTemplateInfo, GXIExtensionTemplateSource } from "@gaiax/taro";
 import "./index.scss";
 import { GXFastPreviewInstance, IGXFastPreviewListener } from "../../gaiax/GXFastPreview";
 
 
-class GXFastPreviewDataSource implements IGXDataSource {
+class GXFastPreviewTemplateSource implements GXIExtensionTemplateSource {
+
+  getTemplate(gxTemplateItem: GXTemplateItem): GXTemplate {
+    const templateData = this.templates.get(gxTemplateItem.templateId)
+    let layer = templateData['index.json'];
+    let css = templateData['index.css'];
+    let data = templateData['index.databinding'];
+    return GXTemplate.create(layer, css, data)
+  }
 
   private templates = new Map<string, any>();
 
@@ -17,21 +25,13 @@ class GXFastPreviewDataSource implements IGXDataSource {
   getData(templateId: string) {
     return this.templates.get(templateId);
   }
-
-  getTemplateInfo(templateItem: GXTemplateItem): GXTemplateInfo {
-    const templateData = this.templates.get(templateItem.templateId)
-    let layer = templateData['index.json'];
-    let css = templateData['index.css'];
-    let data = templateData['index.databinding'];
-    return GXTemplateInfo.create(layer, css, data)
-  }
 }
 
 interface IParams {
   templateId: string;
 }
 
-const gxDataSource = new GXFastPreviewDataSource();
+const gxTemplateSource = new GXFastPreviewTemplateSource();
 
 export default class Index extends Component<IParams> {
 
@@ -43,14 +43,14 @@ export default class Index extends Component<IParams> {
 
     const gxFastPreviewListener: IGXFastPreviewListener = {
       onUpdate: (templateId: string, template: any) => {
-        gxDataSource.addData(templateId, template)
+        gxTemplateSource.addData(templateId, template)
         this.setState({
           templateId: templateId
         });
       }
     }
 
-    GXEngineInstance.registerDataSource(gxDataSource);
+    GXRegisterCenterInstance.registerExtensionTemplateSource(gxTemplateSource);
     GXFastPreviewInstance.startFastPreview();
     GXFastPreviewInstance.setListener(gxFastPreviewListener);
   }
@@ -74,7 +74,7 @@ export default class Index extends Component<IParams> {
       templateItem.templateId = templateId;
 
       let templateData = new GXTemplateData();
-      const template = gxDataSource.getData(templateId);
+      const template = gxTemplateSource.getData(templateId);
       if (template != undefined && template['index.mock'] != undefined) {
         templateData.templateData = template['index.mock'];
       } else {
