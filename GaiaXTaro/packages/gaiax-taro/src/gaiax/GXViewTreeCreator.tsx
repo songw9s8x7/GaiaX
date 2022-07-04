@@ -12,7 +12,7 @@ export default class GXViewTreeCreator {
 
     build(gxTemplateContext: GXTemplateContext): ReactNode {
 
-        const gxRootStyle = GXCssConvertStyle.createRootStyle(gxTemplateContext.gxMeasureSize)
+        const gxRootStyle = GXCssConvertStyle.createRootStyle(gxTemplateContext.gxMeasureSize);
 
         const gxTemplateData = gxTemplateContext.gxTemplateData.templateData as GXJSONObject;
 
@@ -24,7 +24,14 @@ export default class GXViewTreeCreator {
 
         const gxVisualTemplateNode = gxTemplateContext.gxVisualTemplateNode;
 
-        const gxRootNode = this.createNode(gxTemplateContext, gxTemplateData, gxTemplateInfo, gxLayer, gxParentNode, gxVisualTemplateNode)
+        const gxRootNode = this.createNode(
+            gxTemplateContext,
+            gxTemplateData,
+            gxTemplateInfo,
+            gxLayer,
+            gxParentNode,
+            gxVisualTemplateNode
+        );
 
         return <View style={gxRootStyle}>{gxRootNode.gxView}</View>;
     }
@@ -40,7 +47,7 @@ export default class GXViewTreeCreator {
 
         const gxNode = GXNode.create();
 
-        gxNode.setIdPath(gxLayer, gxParentNode)
+        gxNode.setIdPath(gxLayer, gxParentNode);
 
         gxNode.gxTemplateNode = GXTemplateNode.create(gxLayer, gxTemplateInfo, gxVisualTemplateNode);
 
@@ -116,6 +123,8 @@ export default class GXViewTreeCreator {
         gxLayer: GXJSONObject,
         gxTemplateInfo: GXTemplateInfo
     ) {
+        gxNode.gxTemplateNode.initFinal(gxTemplateContext, gxTemplateData, gxVisualTemplateNode, gxNode);
+
         // case 'grid':
         // return <View style={finalNodeStyle} key={gxLayer.id} />;
         // case 'scroll':
