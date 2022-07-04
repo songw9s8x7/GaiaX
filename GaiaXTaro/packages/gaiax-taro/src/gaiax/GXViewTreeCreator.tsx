@@ -129,23 +129,33 @@ export default class GXViewTreeCreator {
             gxNode.gxView = <View style={gxNode.gxTemplateNode.finalStyle} key={gxNode.gxId} >
                 {childArray}
             </View>;
-        } else if (gxNode.gxTemplateNode.isTextType()) {
+        }
+        // Text
+        else if (gxNode.gxTemplateNode.isTextType()) {
             gxNode.gxTemplateNode.initFinal(gxTemplateContext, gxTemplateData, null, gxNode);
             const data = gxNode.gxTemplateNode.getData(gxTemplateData);
             gxNode.gxView = <Text style={gxNode.gxTemplateNode.finalStyle} key={gxNode.gxId} > {data.value} </Text>;
-        } else if (gxNode.gxTemplateNode.isRichTextType()) {
+        }
+        // RichText
+        else if (gxNode.gxTemplateNode.isRichTextType()) {
             gxNode.gxTemplateNode.initFinal(gxTemplateContext, gxTemplateData, null, gxNode);
             const data = gxNode.gxTemplateNode.getData(gxTemplateData);
             gxNode.gxView = <Text style={gxNode.gxTemplateNode.finalStyle} key={gxNode.gxId} > {data.value} </Text>;
-        } else if (gxNode.gxTemplateNode.isIconFontType()) {
+        }
+        // IconFont
+        else if (gxNode.gxTemplateNode.isIconFontType()) {
             gxNode.gxTemplateNode.initFinal(gxTemplateContext, gxTemplateData, null, gxNode);
             const data = gxNode.gxTemplateNode.getData(gxTemplateData);
             gxNode.gxView = <Text style={gxNode.gxTemplateNode.finalStyle} key={gxNode.gxId} > {data.value} </Text>;
-        } else if (gxNode.gxTemplateNode.isImageType()) {
+        }
+        // Image
+        else if (gxNode.gxTemplateNode.isImageType()) {
             gxNode.gxTemplateNode.initFinal(gxTemplateContext, gxTemplateData, null, gxNode);
             const data = gxNode.gxTemplateNode.getData(gxTemplateData);
             gxNode.gxView = <Image style={gxNode.gxTemplateNode.finalStyle} key={gxNode.gxId} src={data.value} />;
-        } else {
+        }
+        // Other
+        else {
             gxNode.gxTemplateNode.initFinal(gxTemplateContext, gxTemplateData, null, gxNode);
             const data = gxNode.gxTemplateNode.getData(gxTemplateData);
             gxNode.gxView = < View style={gxNode.gxTemplateNode.finalStyle} key={gxNode.gxId} />
