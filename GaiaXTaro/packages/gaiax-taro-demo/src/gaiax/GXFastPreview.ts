@@ -4,7 +4,7 @@ import Taro, { SocketTask } from "@tarojs/taro";
 class GXFastPreview {
 
 
-    private studioIpAddress = "30.77.74.170"
+    private studioIpAddress = "30.77.74.80"
     private listener: IGXFastPreviewListener;
     private socketTask: SocketTask;
 

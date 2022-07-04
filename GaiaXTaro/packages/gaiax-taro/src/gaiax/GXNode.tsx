@@ -1,3 +1,4 @@
+import { ReactNode } from "react";
 import { GXJSONObject } from "./GXJson";
 import GXTemplateNode from "./GXTemplateNode";
 
@@ -8,8 +9,12 @@ export class GXNode {
     gxTemplateNode: GXTemplateNode;
 
     id: string = '';
+
     idPath: string = '';
-    gxChildren: Array<GXNode>;
+
+    gxChildren: Array<GXNode> = null;
+
+    gxView?: ReactNode = null;
 
     setIdPath(gxLayer: GXJSONObject, gxParentNode?: GXNode) {
         this.id = gxLayer['id'];

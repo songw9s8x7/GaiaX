@@ -176,18 +176,22 @@ export default class GXTemplateNode {
 
     static create(gxLayer: GXJSONObject, gxTemplateInfo: GXTemplateInfo, gxVisualTemplateNode?: GXTemplateNode): GXTemplateNode {
         const gxTemplateNode = new GXTemplateNode()
+
+        const layerId = gxLayer['id'];
+        
         // 获取原始节点的层级
-        gxTemplateNode.layer = gxLayer
+        gxTemplateNode.layer = gxLayer;
         // 获取原始节点的样式
-        gxTemplateNode.css = gxTemplateInfo.css['#' + gxLayer['id']] || gxTemplateInfo.css['.' + gxLayer['id']]
+        gxTemplateNode.css = gxTemplateInfo.css['#' + layerId] || gxTemplateInfo.css['.' + layerId];
         // 获取原始节点的数据
-        gxTemplateNode.data = gxTemplateInfo.data['data']?.[gxLayer['id']];
+        gxTemplateNode.data = gxTemplateInfo.data['data']?.[layerId];
         // 获取原始节点的事件
-        gxTemplateNode.event = gxTemplateInfo.data['event'];
+        gxTemplateNode.event = gxTemplateInfo.data['event']?.[layerId];
         // 获取原始节点的动画
-        gxTemplateNode.animation = gxTemplateInfo.data['animation'];
+        gxTemplateNode.animation = gxTemplateInfo.data['animation']?.[layerId];
         // 设置虚拟节点
         gxTemplateNode.gxVisualTemplateNode = gxVisualTemplateNode;
+
         return gxTemplateNode;
     }
 }
