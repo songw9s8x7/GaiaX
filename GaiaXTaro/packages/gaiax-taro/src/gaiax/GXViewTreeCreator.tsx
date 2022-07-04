@@ -67,6 +67,7 @@ export default class GXViewTreeCreator {
 
                     const childLayer = target as GXJSONObject;
 
+                    // 嵌套子模板类型，是个虚拟节点
                     if (GXTemplateNode.isNestChildTemplateType(childLayer)) {
 
                         const gxChildTemplateInfo = gxTemplateInfo.getChildTemplate(childLayer.id);
@@ -106,7 +107,9 @@ export default class GXViewTreeCreator {
 
                             childArray.push(childNode.gxView);
                         }
-                    } else {
+                    }
+                    // 普通子节点
+                    else {
                         const childNode = this.createNode(
                             gxTemplateContext,
                             gxTemplateData,
@@ -132,15 +135,19 @@ export default class GXViewTreeCreator {
             gxNode.gxView = <Text style={gxNode.gxTemplateNode.finalStyle} key={gxNode.gxId} > {data.value} </Text>;
         } else if (gxNode.gxTemplateNode.isRichTextType()) {
             gxNode.gxTemplateNode.initFinal(gxTemplateContext, gxTemplateData, null, gxNode);
-            gxNode.gxView = <Text style={gxNode.gxTemplateNode.finalStyle} key={gxNode.gxId} > {'GaiaX'} </Text>;
+            const data = gxNode.gxTemplateNode.getData(gxTemplateData);
+            gxNode.gxView = <Text style={gxNode.gxTemplateNode.finalStyle} key={gxNode.gxId} > {data.value} </Text>;
         } else if (gxNode.gxTemplateNode.isIconFontType()) {
             gxNode.gxTemplateNode.initFinal(gxTemplateContext, gxTemplateData, null, gxNode);
-            gxNode.gxView = <Text style={gxNode.gxTemplateNode.finalStyle} key={gxNode.gxId} > {'GaiaX'} </Text>;
+            const data = gxNode.gxTemplateNode.getData(gxTemplateData);
+            gxNode.gxView = <Text style={gxNode.gxTemplateNode.finalStyle} key={gxNode.gxId} > {data.value} </Text>;
         } else if (gxNode.gxTemplateNode.isImageType()) {
             gxNode.gxTemplateNode.initFinal(gxTemplateContext, gxTemplateData, null, gxNode);
-            gxNode.gxView = <Image style={gxNode.gxTemplateNode.finalStyle} key={gxNode.gxId} src={'GaiaX'} />;
+            const data = gxNode.gxTemplateNode.getData(gxTemplateData);
+            gxNode.gxView = <Image style={gxNode.gxTemplateNode.finalStyle} key={gxNode.gxId} src={data.value} />;
         } else {
             gxNode.gxTemplateNode.initFinal(gxTemplateContext, gxTemplateData, null, gxNode);
+            const data = gxNode.gxTemplateNode.getData(gxTemplateData);
             gxNode.gxView = < View style={gxNode.gxTemplateNode.finalStyle} key={gxNode.gxId} />
         }
 
