@@ -50,7 +50,9 @@ export default class GXViewTreeCreator {
             // return <View style={finalNodeStyle} key={gxLayer.id} />;
             // case 'scroll':
             // return <View style={finalNodeStyle} key={gxLayer.id} />;
-        } else if (gxNode.gxTemplateNode.isViewType() || gxNode.gxTemplateNode.isGaiaTemplate()) {
+        }
+        // View or Template
+        else if (gxNode.gxTemplateNode.isViewType() || gxNode.gxTemplateNode.isGaiaTemplate()) {
 
             gxNode.gxTemplateNode.initFinal(gxTemplateContext, gxTemplateData, gxVisualTemplateNode, gxNode);
 
