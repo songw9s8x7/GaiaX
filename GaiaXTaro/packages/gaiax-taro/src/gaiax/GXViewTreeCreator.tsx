@@ -6,7 +6,7 @@ import GXTemplateNode from "./GXTemplateNode";
 import GXCssConvertStyle from "./GXCssConvertStyle";
 import GXTemplateInfo from "./GXTemplateInfo";
 import { GXJSONArray, GXJSONObject } from "./GXJson";
-import GXDataBinding from "./GXDatabinding";
+import { GXTemplateItem } from "./GXTemplateEngine";
 
 export default class GXViewTreeCreator {
 
@@ -52,7 +52,7 @@ export default class GXViewTreeCreator {
             // return <View style={finalNodeStyle} key={gxLayer.id} />;
         } else if (gxNode.gxTemplateNode.isViewType() || gxNode.gxTemplateNode.isGaiaTemplate()) {
 
-            gxNode.gxTemplateNode.initFinal(gxTemplateContext, gxTemplateData, null, gxNode);
+            gxNode.gxTemplateNode.initFinal(gxTemplateContext, gxTemplateData, gxVisualTemplateNode, gxNode);
 
             const childArray: ReactNode[] = [];
             const layers = gxLayer['layers'] as GXJSONArray;
@@ -77,11 +77,21 @@ export default class GXViewTreeCreator {
 
                         // 容器模板下的子模板
                         if (gxNode.gxTemplateNode.isContainerType()) {
+
+                            if (gxNode != null && gxNode.gxChildTemplateItems == null) {
+                                gxNode.gxChildTemplateItems = new Array<GXTemplateItem>();
+                            }
+                            // 容器下的子模板
+                            const childTemplateItems = GXTemplateItem.create(
+                                gxTemplateContext.gxTemplateItem.templateBiz,
+                                gxChildLayer.id
+                            );
+                            gxNode?.gxChildTemplateItems?.push(childTemplateItems);
                         }
                         // 普通模板嵌套的子模板根节点，可能是普通模板也可能是容器模板
                         else {
 
-                            const gxChildTemplateData = gxChildVisualTemplateNode.getData(gxTemplateData);
+                            const gxChildTemplateData = gxChildVisualTemplateNode.getDataValue(gxTemplateData);
 
                             const childNode = this.createNode(
                                 gxTemplateContext,
@@ -91,9 +101,9 @@ export default class GXViewTreeCreator {
                                 gxNode,
                                 gxChildVisualTemplateNode
                             );
-    
+
                             gxNode?.gxChildren?.push(childNode);
-    
+
                             childArray.push(childNode.gxView);
                         }
                     } else {
@@ -113,20 +123,25 @@ export default class GXViewTreeCreator {
                 }
             }
 
-            gxNode.gxView = <View style={gxNode.gxTemplateNode.finalStyle} key={gxNode.id} >
+            gxNode.gxView = <View style={gxNode.gxTemplateNode.finalStyle} key={gxNode.gxId} >
                 {childArray}
             </View>;
         } else if (gxNode.gxTemplateNode.isTextType()) {
+            gxNode.gxTemplateNode.initFinal(gxTemplateContext, gxTemplateData, null, gxNode);
             const data = gxNode.gxTemplateNode.getData(gxTemplateData);
-            gxNode.gxView = <Text style={gxNode.gxTemplateNode.finalStyle} key={gxNode.id} > {data.value} </Text>;
+            gxNode.gxView = <Text style={gxNode.gxTemplateNode.finalStyle} key={gxNode.gxId} > {data.value} </Text>;
         } else if (gxNode.gxTemplateNode.isRichTextType()) {
-            gxNode.gxView = <Text style={gxNode.gxTemplateNode.finalStyle} key={gxNode.id} > {'GaiaX'} </Text>;
+            gxNode.gxTemplateNode.initFinal(gxTemplateContext, gxTemplateData, null, gxNode);
+            gxNode.gxView = <Text style={gxNode.gxTemplateNode.finalStyle} key={gxNode.gxId} > {'GaiaX'} </Text>;
         } else if (gxNode.gxTemplateNode.isIconFontType()) {
-            gxNode.gxView = <Text style={gxNode.gxTemplateNode.finalStyle} key={gxNode.id} > {'GaiaX'} </Text>;
+            gxNode.gxTemplateNode.initFinal(gxTemplateContext, gxTemplateData, null, gxNode);
+            gxNode.gxView = <Text style={gxNode.gxTemplateNode.finalStyle} key={gxNode.gxId} > {'GaiaX'} </Text>;
         } else if (gxNode.gxTemplateNode.isImageType()) {
-            gxNode.gxView = <Image style={gxNode.gxTemplateNode.finalStyle} key={gxNode.id} src={'GaiaX'} />;
+            gxNode.gxTemplateNode.initFinal(gxTemplateContext, gxTemplateData, null, gxNode);
+            gxNode.gxView = <Image style={gxNode.gxTemplateNode.finalStyle} key={gxNode.gxId} src={'GaiaX'} />;
         } else {
-            gxNode.gxView = < View style={gxNode.gxTemplateNode.finalStyle} key={gxNode.id} />
+            gxNode.gxTemplateNode.initFinal(gxTemplateContext, gxTemplateData, null, gxNode);
+            gxNode.gxView = < View style={gxNode.gxTemplateNode.finalStyle} key={gxNode.gxId} />
         }
 
         return gxNode;

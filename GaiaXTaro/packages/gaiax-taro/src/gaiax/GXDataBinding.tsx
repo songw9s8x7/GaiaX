@@ -12,8 +12,13 @@ export default class GXDataBinding {
     }
 
     static getData(data?: GXJSONObject, gxTemplateData?: GXJSONObject): GXJSONObject {
-        if (data != null && data.value != null) {
-            return GXExpression.desireData(data.value, gxTemplateData) as GXJSONObject
+        if (data != null) {
+            const result = {};
+            if (data.value != null) {
+                result['value'] = GXExpression.desireData(data.value, gxTemplateData) as GXJSONObject;
+                return result as GXJSONObject;
+            }
+            return {} as GXJSONObject;
         }
         return {} as GXJSONObject;
     }

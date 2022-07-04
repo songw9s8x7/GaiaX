@@ -19,6 +19,10 @@ export default class GXTemplateNode {
         return GXDataBinding.getData(this.data, gxTemplateData);
     }
 
+    getDataValue(gxTemplateData?: GXJSONObject): GXJSONObject {
+        return GXDataBinding.getData(this.data, gxTemplateData)['value'] as GXJSONObject;
+    }
+
     initFinal(
         gxTemplateContext: GXTemplateContext,
         gxTemplateData?: GXJSONObject,

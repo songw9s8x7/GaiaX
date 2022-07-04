@@ -1,34 +1,35 @@
 import { ReactNode } from "react";
 import { GXJSONObject } from "./GXJson";
+import { GXTemplateItem } from "./GXTemplateEngine";
 import GXTemplateNode from "./GXTemplateNode";
 
 export class GXNode {
 
-    nodeCss: any;
-
     gxTemplateNode: GXTemplateNode;
 
-    id: string = '';
+    gxId: string = '';
 
-    idPath: string = '';
+    gxIdPath: string = '';
 
     gxChildren: Array<GXNode> = null;
 
     gxView?: ReactNode = null;
 
+    gxChildTemplateItems?: Array<GXTemplateItem>;
+
     setIdPath(gxLayer: GXJSONObject, gxParentNode?: GXNode) {
-        this.id = gxLayer['id'];
+        this.gxId = gxLayer['id'];
         if (gxParentNode != null) {
-            if (this.idPath.length != 0) {
-                this.idPath = `${gxParentNode.idPath}@${this.idPath}@${this.id}`
+            if (this.gxIdPath.length != 0) {
+                this.gxIdPath = `${gxParentNode.gxIdPath}@${this.gxIdPath}@${this.gxId}`
             } else {
-                this.idPath = `${gxParentNode.idPath}@${this.id}`
+                this.gxIdPath = `${gxParentNode.gxIdPath}@${this.gxId}`
             }
         } else {
-            if (this.idPath.length != 0) {
-                this.idPath = `${this.idPath}@${this.id}`
+            if (this.gxIdPath.length != 0) {
+                this.gxIdPath = `${this.gxIdPath}@${this.gxId}`
             } else {
-                this.idPath = this.id
+                this.gxIdPath = this.gxId
             }
         }
     }
