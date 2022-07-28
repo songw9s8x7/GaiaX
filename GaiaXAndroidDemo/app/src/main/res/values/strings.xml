@@ -7,4 +7,5 @@
     <string name="data">Data Binding</string>
     <string name="event">Event Binding</string>
     <string name="api">Api</string>
+    <string name="input_edit">keyboard show</string>
 </resources>

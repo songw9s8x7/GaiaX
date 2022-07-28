@@ -76,5 +76,10 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(MainActivity@ this, ApiTemplateActivity::class.java)
             startActivity(intent)
         }
+
+        findViewById<AppCompatButton>(R.id.edit_text)?.setOnClickListener {
+            val intent = Intent(MainActivity@ this, KeyboardTemplateActivity::class.java)
+            startActivity(intent)
+        }
     }
 }

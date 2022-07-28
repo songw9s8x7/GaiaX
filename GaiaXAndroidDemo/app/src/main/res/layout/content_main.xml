@@ -59,5 +59,13 @@
             android:layout_height="wrap_content"
             android:text="@string/api"
             android:textColor="@color/black" />
+
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/edit_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/input_edit"
+            android:textColor="@color/black" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

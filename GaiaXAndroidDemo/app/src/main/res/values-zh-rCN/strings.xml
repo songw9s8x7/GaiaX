@@ -7,4 +7,5 @@
     <string name="data">数据绑定</string>
     <string name="event">事件绑定</string>
     <string name="api">Api</string>
+    <string name="input_edit">输入法弹出</string>
 </resources>

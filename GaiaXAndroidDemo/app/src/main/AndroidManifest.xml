@@ -29,6 +29,12 @@
         <activity
             android:name=".NormalTemplateActivity"
             android:exported="true" />
+
+        <activity
+            android:name=".KeyboardTemplateActivity"
+            android:configChanges="keyboardHidden|screenSize|smallestScreenSize|screenLayout|orientation|uiMode"
+            android:windowSoftInputMode="adjustResize|stateHidden"
+            android:exported="true" />
         <activity
             android:name=".MainActivity"
             android:exported="true"

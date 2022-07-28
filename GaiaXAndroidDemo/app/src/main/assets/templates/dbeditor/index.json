@@ -1,0 +1,22 @@
+{
+  "id": "dbeditor",
+  "type": "gaia-template",
+  "package": {
+    "id": "dbeditor",
+    "version": "0.0.1",
+    "modify-timestamp": "Wed Jul 27 2022 20:17:51 GMT+0800 (中国标准时间)",
+    "dependencies": {}
+  },
+  "layers": [
+    {
+      "id": "toolbar",
+      "type": "view",
+      "layers": [
+        { "id": "closeView", "type": "image" },
+        { "id": "publishButton", "type": "text" }
+      ]
+    },
+    { "id": "editorArea", "type": "view" },
+    { "id": "bottomContainer", "type": "view" }
+  ]
+}
